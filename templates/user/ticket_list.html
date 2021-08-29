@@ -1,0 +1,231 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+  <!-- content starts -->
+
+
+  <div>
+    <ul class="breadcrumb">
+      <li>
+        <a href="dashboard">Home</a>
+      </li>
+      <li>
+        <a href="#">Tickets</a>
+      </li>
+      <li>
+        <a href="#">List Tickets</a>
+      </li>
+    </ul>
+  </div>
+
+  <div class="row">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-header well" data-original-title="">
+          <h2><i class="fa fa-ticket"></i> Tickets List</h2>
+
+          <div class="box-icon">
+            <a href="" class="btn btn-round btn-default"><i class="glyphicon glyphicon-refresh"></i></a>
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+          </div>
+        </div>
+        <div class="box-content table-responsive" style="overflow: auto;">
+
+          <a href="ticket_create" class="btn btn-primary btn-xs pull-right"><i
+              class="fa fa-plus-circle"></i>&nbsp;&nbsp;Create Ticket</a>
+          <br><br>
+
+          <style>
+            td {
+              text-align: center;
+            }
+
+            th {
+              text-align: center;
+            }
+          </style>
+          <!-- put your content here -->
+          <table class="table table-striped table-condensed table-bordered" id="ticket_list_tbl">
+
+            <thead>
+              <tr>
+                <th>
+                  Ticket
+                </th>
+                <th>
+                  Subject
+                </th>
+                <th>
+                  Status
+                </th>
+                <th>
+                  Created By
+                </th>
+                <th>
+                  ResolvedDate
+                </th>
+                <th>
+                  ClosedDate
+                </th>
+                <th>
+                  CreatedDate
+                </th>
+
+
+
+              </tr>
+            </thead>
+            <tbody>
+              {% for ticket in tickets %}
+
+              {% if ticket.status|int == 0 %}
+                {% set t_status = "Open" %}
+              {% endif %}
+              {% if ticket.status|int == 1 %}
+                {% set t_status = "Resolved" %}
+              {% endif %}
+              {% if ticket.status|int == 2 %}
+                {% set t_status = "Closed" %}
+              {% endif %}
+              {% if ticket.status|int > 2 %}
+                {% set t_status = "Open" %}
+              {% endif %}
+                <tr>
+                  <td><a href="/ticket_desc/{{ticket.id}}">#{{ticket.id}}</a></td>
+                  <td>{{ticket['subject']}}</td>
+                  <td>{{t_status}}</td>
+                  <td>{{ticket.created_by}}</td>
+                  {% if ticket.resolved_date == "0000-00-00 00:00:00" %}
+                    {% set t_resolved_date = "None" %}
+                  {% else %}
+                    {% set t_resolved_date = ticket.resolved_date %}
+                  {% endif %}
+                  <td>{{t_resolved_date}}</td>
+                  {% if ticket.closed_date == "0000-00-00 00:00:00" %}
+                    {% set t_closed_date = "None" %}
+                  {% else %}
+                    {% set t_closed_date = ticket.resolved_date %}
+                  {% endif %}
+                  <td>{{t_closed_date}}</td>
+                  <td>{{ticket.created_date}}</td>
+                </tr>
+              {% endfor %}
+            </tbody>
+
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/row-->
+
+
+
+
+
+
+
+  <!--Data table -->
+
+  <script type="text/javascript">
+
+
+
+
+    $(document).ready(function () {
+
+      //create textboxes on every column for search with coockie
+
+
+      var url = window.location.pathname;
+      var filename = url.substring(url.lastIndexOf('/') + 1);
+
+
+      $('#ticket_list_tbl thead tr:eq(1) th').each(function (i) {
+
+        var title = $(this).text().trim();
+        var width = $(this).width();
+        width = width + 2;
+
+        if (title != "") {
+
+          var content = "";
+
+
+          if (title == "Group") {
+            content = '<select style="width:' + width + 'px; height: 23px;"><option value="">All</option><option value="0">Technical</option><option value="1">Sales</option></select>';
+          }
+          else if (title == "Priority") {
+            content = '<select style="width:' + width + 'px; height: 23px;"><option value="">All</option><option value="0">Low</option><option value="1">Medium</option><option value="2">High</option><option value="3">Urgent</option></select>';
+          }
+          else if (title == "Status") {
+            content = '<select style="width:' + width + 'px; height: 23px;"><option value="">All</option><option value="0">Open</option><option value="1">Reopened</option><option value="2">Resolved</option><option value="3">Closed</option></select>';
+          }
+          else if (title == "CreatedDate") {
+
+            content = '<input autocomplete="new-password" id="ticket_created_date" style="width:' + width + 'px; height: 23px;" type="text" placeholder="' + title + '" />';
+          }
+          else {
+
+            content = '<input autocomplete="new-password" style="width:' + width + 'px; height: 23px;" type="text" placeholder="' + title + '" />';
+          }
+
+          $(this).html(content);
+
+        }
+        else {
+          $(this).html('');
+        }
+
+        $('input,select', this).on('keyup change', function () {
+          if (table.column(i).search() !== this.value) {
+            table
+              .column(i)
+              .search(this.value)
+              .draw();
+          }
+        });
+      });
+
+
+     
+      $('#select-all').on('click', function () {
+
+        $('#ticket_list_tbl tr:has(td) input[type="checkbox"]').prop('checked', this.checked);
+      });
+
+      //show/hide column_search with coockie
+
+      if ($.cookie(filename + "_cl_sr") == '1') {
+
+        table.button(5).active(true);
+        $('.column_search').show();
+      }
+      else {
+
+        table.button(5).active(false);
+        $('.column_search').hide();
+      }
+
+      //without mindate
+
+      $("#ticket_due_date,#ticket_created_date,#ticket_updated_date").datepicker({
+        changeMonth: true,
+        changeYear: true,
+        yearRange: "1901:2050",
+        dateFormat: "yy-mm-dd",
+        showButtonPanel: true
+
+      });
+    });
+
+  </script>
+
+  <script src="{{ url_for('static', filename='js/ticket.js') }}"></script>
+
+
+  <!-- content ends -->
+</div>
+{% endblock body %}

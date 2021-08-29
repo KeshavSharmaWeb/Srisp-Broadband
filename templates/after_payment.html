@@ -1,0 +1,14 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+    {% if status == 'success'  %}
+    <b> Thanks. Payment Successful.</b>
+    <form action="/generate_invoice" method="post">
+        <input type="hidden" name="gst" value="False">
+        <input type="text" name="u_id" value="{{user_data['u_id']}}">
+        <button style="padding: 25px; color: green;">Download Invoice</button>
+        {{callback_response}}
+    </form>
+    {% else %}
+        Sorry! The payment couldn't be processed!
+    {% endif %}
+{% endblock body %}

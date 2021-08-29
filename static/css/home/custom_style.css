@@ -1,0 +1,113 @@
+
+.navigation-row{
+
+	margin: auto;
+}
+
+.login_buttons_home{
+
+	line-height: 50px;
+	
+}
+
+.login_buttons_home a {
+
+	font: Arial !important;
+	font-weight: bold !important;
+	letter-spacing: 1px;
+}
+.login_buttons a {
+
+	font: Arial !important;
+	font-weight: bold !important;
+	letter-spacing: 1px;
+}
+.login_section{
+
+	/*margin-top: -50px !important;*/
+	padding-top: 0px !important;
+
+
+
+}
+
+.contact-section2 input{
+
+	 border-radius: 6px;
+	 height: 42px;
+	 /*border: solid 0.01em #aecdd4;*/
+	 /*background-color : #37646e;*/
+	 /*line-height: 0px;*/
+	 margin-bottom: 20px !important;
+	 /*padding-bottom: 0px;*/
+}
+
+
+.contact-section2 .btn{
+
+	 border-radius: 6px;
+}
+
+
+
+.checkbox {
+    width: 17px !important;
+    height: 17px !important;
+    /*vertical-align:middle;*/
+	margin-bottom: 0px !important;
+
+}
+
+
+.login_section {
+    width: 100% !important;
+    margin: auto;
+  }
+
+@media screen and (min-width: 1400px) {
+  .login_section {
+    width: 80% !important;
+    margin: auto;
+  }
+}
+@media screen and (min-width: 1600px) {
+  .login_section {
+    width: 80% !important;
+    margin: auto;
+  }
+}
+@media screen and (min-width: 1900px) {
+  .login_section {
+    width: 80% !important;
+    margin: auto;
+  }
+}
+
+
+.login_section{
+
+	margin-top: 0px !important;
+	padding-top: 0px !important;
+
+}
+
+
+@media screen and (min-width: 767px) {
+  #logo img{
+
+	filter: grayscale(100%); 
+	filter: brightness(0) invert(1);
+}
+}
+
+
+.plan_plate h4,h5{
+
+	text-transform: none;
+
+}
+
+.welcome-title {
+  font-size: 50px !important;
+}
+

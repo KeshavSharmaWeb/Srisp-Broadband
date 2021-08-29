@@ -1,0 +1,202 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+  
+<div>
+<ul class="breadcrumb">
+<li>
+    <a href="/user">Home</a>
+</li>
+<li>
+    Services
+</li>
+<li>
+    Service History
+</li>
+
+</ul>
+</div>
+
+<div class="row">
+<div class="box col-md-12" >
+<div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="fa fa-history"></i> Service History</h2>
+
+        <div class="box-icon">
+            <a href="" class="btn btn-round btn-default"><i
+                    class="glyphicon glyphicon-refresh"></i></a>
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                    class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i
+                    class="glyphicon glyphicon-remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content table-responsive" style="overflow-y: auto;">
+
+    
+
+      <form action="#" method="post" id="srvhistory_list">
+        <!-- put your content here -->
+        <table class="table table-striped table-condensed table-bordered display" id="srvhistory_list_tbl" cellspacing="0" width="100%">
+            
+            <thead>
+              <tr>
+                <th>
+                  <input type="checkbox" name="select_all" id="select-all">
+                </th>
+                <th>
+                  UserName
+                </th>
+                <th>
+                  Plan
+                </th>
+                <th>
+                  RequestDate
+                </th>
+                <th>
+                 ScheduleDate
+                </th>
+                <th>
+                  RequestBy
+                </th>
+                <th>
+                  Status
+                </th>
+                 <th>
+                  Comment
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+                {% for i in service_history %}
+                    <tr>
+                        <td></td>
+                        <td>{{ user_data['u_name'] }}</td>
+                        <td>{{ i['s_name'] }}</td>
+                        <td>{{ i['requestdate'] }}</td>
+                        <td>{{ i['scheduledate'] }}</td>
+                        <td>{{ i['requestby'] }}</td>
+                        <td>{{ i['status'] }}</td>
+                        <td>{{ i['comment'] }}</td>
+                
+                    </tr>
+                {% endfor %}
+            </tbody>
+          
+
+          </table>
+        
+
+
+<!--Data table -->
+
+
+
+
+
+
+          </form>
+    </div>
+</div>
+</div>
+</div><!--/row-->
+
+
+
+
+
+
+<script type="text/javascript">
+var u_id = "";
+$(document).ready(function() {
+var table = $('#srvhistory_list_tbl').dataTable( {
+"order": [[ 0, "desc" ]],
+"processing": true,
+
+// "ajax": "controller/services.php?action=srvhistory_list",
+language: {
+search: "_INPUT_",
+searchPlaceholder: "Find..."
+},
+lengthMenu: [
+[ 10, 25, 50, 100, -1 ],
+[ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
+],
+dom:  "<'row'<'col-sm-6'B><'col-sm-6'f>>" +
+"<'row'<'col-sm-12'tr>>" +
+"<'row'<'col-sm-5'i><'col-sm-7'p>>",
+buttons: [
+      'pageLength',
+{
+        extend:    'copyHtml5',
+        text:      '<i class="fa fa-files-o"></i>',
+        titleAttr: 'Copy'
+    },
+    {
+        extend:    'excelHtml5',
+        text:      '<i class="fa fa-file-excel-o"></i>',
+        titleAttr: 'Excel'
+    },
+    {
+      
+        extend:    'pdfHtml5',
+        text:      '<i class="fa fa-file-pdf-o"></i>',
+        titleAttr: 'PDF',
+        pageSize: 'A4',
+        orientation: 'landscape',
+        title: 'Total Regular User'
+},
+    {
+        extend:    'print',
+        text:      '<i class="fa fa-print"></i>',
+        titleAttr: 'Print',
+        exportOptions: {
+            columns: ':visible'
+          }
+},
+    {
+        extend:    'colvis',
+        text:      'Column',
+        titleAttr: 'Column'
+        },
+],
+
+
+columnDefs: [ 
+  {
+   'targets': 0,
+ 'searchable': false,
+ 'orderable': false,
+ 'className': 'dt-body-center',
+ "data":null,
+ "render": function (data){
+     return '<input type="checkbox" name="s_id[]" value="' + data[1] + '">';
+ }
+},
+
+],
+
+
+select: {
+selector:'td:not(:first-child)',
+style:    'os'
+}
+
+
+});
+
+$('#select-all').on('click', function(){
+
+$('input[type="checkbox"]').prop('checked', this.checked);
+});
+});
+
+</script>
+
+
+<!-- content ends -->
+</div><!--/#content.col-md-0-->
+
+{% endblock body %}

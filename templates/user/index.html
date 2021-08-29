@@ -1,0 +1,131 @@
+{% extends "user/layout.html" %}
+{% block body %}
+
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+
+    <div>
+        <ul class="breadcrumb">
+            <li>
+                <a href="/user">Home</a>
+            </li>
+            
+            <li class="pull-right">
+                <i id="conn_symbol"></i>&nbsp;&nbsp;<a href="#" id="conn_status"></a>
+            </li>
+        </ul>
+    </div>
+
+
+    <div class="row main-cont">
+
+        <!-- Dashboard Header -->
+
+        <div class="col-lg-3 col-sm-6">
+            <div class="card card-cyan" id="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-primary text-center">
+                                <i class="glyphicon glyphicon-sort"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Remain Data</p>
+                                <div id="remain_data">{{remain_days}}</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr>
+                        <div class="stats">
+                            <i class="glyphicon glyphicon-sort"></i> <a href="#">Total Remain Data</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card card-green" id="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-success text-center">
+                                <i class="fa fa-calendar"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Remain Days</p>
+                                <div id="remain_days">N/A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-calendar"></i> <a href="#">Remain Days to Expire</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card card-yellow" id="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-warning text-center">
+                                <i class="fa fa-clock-o"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Remain Uptime</p>
+                                <div id="remain_uptime">N/A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-clock-o"></i> <a href="#">Total Remain Uptime</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-lg-3 col-sm-6">
+            <div class="card card-red" id="card">
+                <div class="content">
+                    <div class="row">
+                        <div class="col-xs-5">
+                            <div class="icon-big icon-info text-center">
+                                <i class="fa fa-database"></i>
+                            </div>
+                        </div>
+                        <div class="col-xs-7">
+                            <div class="numbers">
+                                <p>Today's Usage</p>
+                                <div id="today_usage">N/A</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="footer">
+                        <hr>
+                        <div class="stats">
+                            <i class="fa fa-database"></i> <a href="#">Today's Data Usage</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- dashboard header finish -->
+
+    </div>
+
+    <!-- content ends -->
+</div>
+
+{% endblock %} 

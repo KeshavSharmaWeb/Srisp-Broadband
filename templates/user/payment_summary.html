@@ -1,0 +1,132 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+  
+
+<div>
+<ul class="breadcrumb">
+<li>
+    <a href="/user">Home</a>
+</li>
+<li>
+    Recharge/Topup
+</li>
+</ul>
+</div>
+
+<div class="row main-cont">
+<div class="box col-md-12">
+<div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="fa fa-refresh"></i> Recharge/Topup</h2>
+
+        <div class="box-icon">
+            <!-- <a href="#" class="btn btn-setting btn-round btn-default"><i
+                    class="glyphicon glyphicon-cog"></i></a> -->
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                    class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i
+                    class="glyphicon glyphicon-remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content row">
+        <!-- put your content here -->
+        <br>
+        <div class="col-md-12"><h5 style="color: #d9534f;"><b>* Warning: </b>Previous Credit will be lost on Successful Recharge.</h5>
+            <br><br>
+        </div>
+        
+
+
+        <!--- Recharge Mode -->
+        <div class="col-md-8 col-md-offset-2">
+
+                              <h4 class="text-center"><b><u>Payment Summary</u></b></h4>
+            <table class="table table-bordered table-condensed table-striped table-hovered">
+                        <tr>
+                          <th>Service/Plan</th>
+                          <td>{{ plan['s_name'] }}</td>
+                        </tr>
+                        <tr>
+                          <th>Rate (Down/UP)</th>
+                          <td>{{ plan['s_rate'] }}</td>
+                        </tr>
+                        <tr>
+                          <th>Total Data Limit per Unit</th>
+                          <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                          <th>Expiration Limit per Unit</th>
+                          <td>{{ plan['s_date_limit'] }}</td>
+                        </tr>
+                        <tr>
+                          <th>Uptime Limit per Unit</th>
+                          <td>Unlimited</td>
+                        </tr>
+                        <tr>
+                          <th>Price per Unit</th>
+                          <td>&#8377; {{ plan['s_price'] }}</td>
+                        </tr>
+
+                        <tr>
+                          <th>Quantity</th>
+                          <td>x 1</td>
+                        </tr>
+
+                        <tr>
+                          <th>Sub Total</th>
+                          <td>&#8377; {{ plan['s_price'] }}</td>
+                        </tr>
+
+                        
+
+
+                        <tr style="font-weight: bold;">
+                          <th>Grand Total</th>
+                          <td>&#8377; {{ plan['s_price'] }}</td>
+                        </tr>
+
+                        <tr style="display: none;" id="wallet_money">
+                          <th>Deduct From Wallet</th>
+                          <td>- &#8377; 0.00&nbsp;&nbsp;&nbsp;(Remain Balance: &#8377; 0.00)</td>
+                        </tr>
+
+                        <tr style="font-weight: bold; display: none;" id="payable_amount">
+                          <th>Payable Amount</th>
+                          <td>&#8377; {{ plan['s_price'] }}.00</td>
+                        </tr>
+
+                        
+              </table>
+
+              
+              <br>
+              <div class="form-group row">
+              
+              <div class="col-md-12 text-center">
+                <form action="{{ url }}" method="POST">
+					<dl>
+						{% for key, value in data.items() %}
+							<input readonly type="hidden" name="{{ key }}" value="{{ value }}">
+						{% endfor %}
+					</dl>
+               <button type="submit" class="btn btn-success btn-sm" id="proceed_pay_btn" name="proceed_pay_btn"><i class="fa fa-arrow-right" aria-hidden="true" ></i>&nbsp;&nbsp;Proceed to Pay</button>
+               </form>
+              </div>
+            </div>
+
+        
+
+        </div>
+
+    </div>
+</div>
+</div>
+</div><!--/row-->
+<script src="{{ url_for('static', filename='js/recharge_topup.js') }}"></script>
+
+<!-- content ends -->
+</div><!--/#content.col-md-0-->
+
+{% endblock body %}

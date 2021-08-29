@@ -1,0 +1,91 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+  
+
+<div>
+<ul class="breadcrumb">
+<li>
+    <a href="/user">Home</a>
+</li>
+<li>
+    Tickets
+</li>
+<li>
+    Create Ticket
+</li>
+</ul>
+</div>
+
+<div class="row">
+<div class="box col-md-12">
+<div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="fa fa-ticket"></i> Create Ticket</h2>
+
+        <div class="box-icon">
+            <a href="#" class="btn btn-setting btn-round btn-default"><i
+                    class="glyphicon glyphicon-cog"></i></a>
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                    class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i
+                    class="glyphicon glyphicon-remove"></i></a>
+        </div>
+    </div>
+    <br>
+    <br>
+    <div class="box-content row">
+        <!-- put your content here -->
+        <form autocomplete="off" action="/ticket_create" method="POST" id="ticket_create" class="form-horizontal form-sm" enctype="multipart/form-data">
+        <div class="col-md-8 col-md-offset-2">
+         
+
+             
+              <!--- Issue -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Issue</label>
+              <div class="col-md-7">
+
+              <select id="group" name="group" class="form-control input-sm" required>
+              <option selected disabled>--Select Ticket--</option>
+              <option value="Internet Not Working">Internet Not Working</option>
+              <option value="Net Down">Net Down</option>
+              <option value="Password Reset">Password Reset</option>
+              <option value="Renewal">Renewal</option>
+              <option value="Server Down">Server Down</option>
+              <option value="Setting">Setting</option>
+              <option value="Shifting">Shifting</option>
+              <option value="Speed Problem">Speed Problem</option>
+              <option value="Unplugged">Unplugged</option>
+              <option value="Wire Problem">Wire Problem</option>
+              <option value="Router Configuration">Router Configuration</option>
+              </select>
+
+              </div>
+              </div>
+
+
+              <div class="form-group row">
+              
+              <div class="col-md-11 text-center">
+               <button type="submit" class="btn btn-success btn-sm" id="ticket_create_btn" name="ticket_create_btn"><i class="fa fa-plus"></i>&nbsp;&nbsp;Create</button>
+              </div>
+              </div>
+
+               
+          
+          
+
+        </div>
+
+</form>
+    </div>
+</div>
+</div>
+</div><!--/row-->
+
+<!-- content ends -->
+</div><!--/#content.col-md-0-->
+
+{% endblock body %}

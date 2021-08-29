@@ -1,0 +1,386 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link href="{{ url_for('static', filename='css/home/googlefonts_raleway.css') }}" rel="stylesheet">
+
+    <title>Home | GIGA FIBERNET BROADBAND SERVICE</title>
+
+    <!-- Additional CSS Files -->
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home/bootstrap.min.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home/font-awesome.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home/fullpage.min.css') }}">
+
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/home/owl.carousel.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/animate.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/templatemo-style.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/responsive.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/home/custom_style.css') }}">
+
+    <link href="{{ url_for('static', filename='css/home/toastr.min.css') }}" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+
+
+    </head>
+    
+    <body>
+    
+    <div id="video">
+        <div class="preloader">
+            <div class="preloader-bounce">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+
+        <header id="header">
+            <div class="container-fluid">
+                <div class="navbar">
+                    <a href="/home" id="logo">
+                        <img src="{{ url_for('static', filename='img/logo.png') }}" height="60">
+                    </a>
+                    <div class="navigation-row">
+                        <nav id="navigation">
+                            <button type="button" class="navbar-toggle"> <i class="fa fa-bars"></i> </button>
+                            <div class="nav-box navbar-collapse">
+                                <ul class="navigation-menu nav navbar-nav navbars" id="nav">
+                                    <li data-menuanchor="home" class="active"><a href="#home">Home</a></li>
+                                    <li data-menuanchor="aboutus"><a href="#aboutus">AboutUs</a></li>
+                                    <li data-menuanchor="plans"><a href="#plans">Plans</a></li>
+                                    <li data-menuanchor="contactus"><a href="#contactus">ContactUs</a></li>
+                                    <li><a href="/terms_conditions">Terms&Conditions</a></li>
+                                </ul>
+                            </div>
+                        </nav>
+                    </div>
+
+                    <div class="login_buttons">
+                        <a href="/login" class="btn btn-default btn-xs"><i class="fa fa-users"></i>&nbsp;&nbsp;Subscriber</a>
+                    </div>
+                        
+
+                </div>
+            </div>
+        </header>
+
+        <!-- <video autoplay muted loop id="myVideo">
+          <source src="assets/home2/images/video-bg.mp4" type="video/mp4">
+        </video> -->
+
+        <!-- <img src="assets/home2/images/main-bg.jpg" id="myVideo" /> -->
+
+        <div id="fullpage" class="fullpage-default">
+
+            <div class="section animated-row" data-section="home">
+                <div class="section-inner">
+                    <div class="welcome-box">
+                        <span class="welcome-first animate" data-animate="fadeInUp">Hello, welcome to</span>
+                        <h2 class="welcome-title animate" data-animate="fadeInUp">SRISP BROADBAND SERVICES</h2>
+                        <p class="animate" data-animate="fadeInUp"></p>
+                      
+                        <div class="login_buttons_home">
+
+                            <a href="/login" class="btn btn-default btn-xs" ><i class="fa fa-users"></i>&nbsp;&nbsp;Subscriber</a>&nbsp;&nbsp;
+                            <a href="/admin" class="btn btn-default btn-xs" ><i class="fa fa-lock"></i>&nbsp;&nbsp;Admin</a>
+                            
+                        </div>
+                        <div class="scroll-down next-section animate data-animate="fadeInUp""><img src="assets/home2/images/mouse-scroll.png" alt=""><span>Scroll Down</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section animated-row" data-section="aboutus">
+                <div class="section-inner">
+                    <div class="about-section">
+                        <div class="row justify-content-center">
+                            <div class="col-lg-8 wide-col-laptop">
+                                <div class="row">
+                                    <div class="col-md-10" style="margin: auto;">
+                                        <div class="about-contentbox">
+                                            <div class="animate" data-animate="fadeInUp">
+                                                <span>About Us</span>
+                                                <h2>Who we are?</h2>
+                                                <p>GIGA started its journey in the year 2020 as the pioneer of Broadband in Outer Delhi and has since evolved into an Integrated Communication Services Provider. GIGA’s operations are strategically segmented into Enterprise and Home solutions. Our portfolio ranges from high-speed broadband to next-gen cloud-based services. The solutions we offer are tailored to meet the rapidly changing needs of our customers. GIGA currently offers its services many satisfied customers in Outer Delhi Area (Rani Khera, Mundka, Rasulpur, Madhanpur, Ghevra, Tikri, Bhadurgarh, Asodha, Kharkhoda, Jhajar, Rohad) and is extending its footprint to many more villages.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                   
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section animated-row" data-section="plans">
+                <div class="section-inner">
+                    <div class="row justify-content-center">
+                        <div class="col-md-8 wide-col-laptop">
+                            <div class="title-block animate" data-animate="fadeInUp">
+                                <span>Services</span>
+                                <h2>Internet Plans</h2>
+                            </div>
+                            <div class="services-section">
+                                <div class="services-list owl-carousel">
+
+                                    
+
+                                    <div class="item animate plan_plate" data-animate="fadeInUp" style="width: 100%; line-height: 0px; font-family: sans-serif; font-style: none !important;">
+                                        <div class="service-box">
+                                            <span class="service-icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span>
+                                            <h3>1 Month(s)</h3>
+                                            <h5>&#8377; 449</h5>
+                                            <h5>Rate: 50 Mb/s</h5>
+                                            <h5>DATA: Unlimited</h5><br>
+                                            <a href="#contactus" class="btn btn-primary btn-xs">Book Now</a>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="item animate plan_plate" data-animate="fadeInUp" style="width: 100%; line-height: 0px; font-family: sans-serif; font-style: none !important;">
+                                        <div class="service-box">
+                                            <span class="service-icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span>
+                                            <h3>1 Month(s)</h3>
+                                            <h5>&#8377; 649</h5>
+                                            <h5>Rate: 100 Mb/s</h5>
+                                            <h5>DATA: Unlimited</h5><br>
+                                            <a href="#contactus" class="btn btn-primary btn-xs">Book Now</a>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="item animate plan_plate" data-animate="fadeInUp" style="width: 100%; line-height: 0px; font-family: sans-serif; font-style: none !important;">
+                                        <div class="service-box">
+                                            <span class="service-icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span>
+                                            <h3>1 Month(s)</h3>
+                                            <h5>&#8377; 1199</h5>
+                                            <h5>Rate: 200 Mb/s</h5>
+                                            <h5>DATA: Unlimited</h5><br>
+                                            <a href="#contactus" class="btn btn-primary btn-xs">Book Now</a>
+                                        </div>
+                                    </div>
+
+                                    
+
+                                    <div class="item animate plan_plate" data-animate="fadeInUp" style="width: 100%; line-height: 0px; font-family: sans-serif; font-style: none !important;">
+                                        <div class="service-box">
+                                            <span class="service-icon"><i class="fa fa-tachometer" aria-hidden="true"></i></span>
+                                            <h3>1 Month(s)</h3>
+                                            <h5>&#8377; 1499</h5>
+                                            <h5>Rate: 300 Mb/s</h5>
+                                            <h5>DATA: Unlimited</h5><br>
+                                            <a href="#contactus" class="btn btn-primary btn-xs">Book Now</a>
+                                        </div>
+                                    </div>
+
+                                                                        
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div class="section animated-row" data-section="contactus">
+                <div class="section-inner">
+                    <div class="row justify-content-center">
+                        <div class="col-md-7 wide-col-laptop">
+                            <div class="title-block animate" data-animate="fadeInUp">
+                                <span>Contact Us</span>
+                                <!-- <h2>Get In Touch!</h2> -->
+                            </div>
+                            <div class="contact-section" style="font-family:'Open Sans', sans-serif; letter-spacing: 1px;">
+                                <div class="row">
+                                    <div class="col-md-6 animate" data-animate="fadeInUp">
+                                        <div class="contact-box">
+                                            <div class="contact-row">
+                                                <i class="fa fa-map-marker"></i> KHASRA NO. 433/1, FLAT NO. 14, SHAKUNTALA APPARTMENT, RANI KHERA ROAD, MUNDKA, NEW DELHI-110041                                            </div>
+                                            <div class="contact-row">
+                                                <i class="fa fa-phone"></i> 9310086380                                            </div>
+                                            <div class="contact-row">
+                                                <i class="fa fa-envelope"></i> gigafiber2021@gmail.com                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 animate" data-animate="fadeInUp">
+                                        <form id="inq_form" method="post" action="#">
+                                            <div class="input-field">
+                                                <input type="text" class="form-control" name="name" id="name" required placeholder="Name">
+                                            </div>
+                                            <div class="input-field">
+                                                <input type="email" class="form-control" name="email" id="email" required placeholder="E-mail">
+                                            </div>
+                                            <div class="input-field">
+                                                <input type="text" class="form-control" name="contact" id="contact" required placeholder="Phone/Mobile No.">
+                                            </div>
+                                            <div class="input-field">
+                                                <textarea class="form-control" name="message" id="message" required placeholder="Your Message Here.."></textarea>
+                                            </div>
+                                            <button class="btn submit" type="submit" id="inq_submit">Submit</button>
+                                        </form>
+                                       
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="social-icons">
+            <div class="text-right">
+                <ul class="social-icons">
+
+                                        
+                </ul>
+            </div>
+        </div>
+    </div>  
+
+    <script src="{{ url_for('static', filename='js/jquery.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/fullpage.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/scrolloverflow.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/owl.carousel.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/jquery.inview.min.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/form.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/custom.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+
+    <script src="{{ url_for('static', filename='js/toastr.min.js') }}"></script>
+
+    <script>
+
+
+toastr.options = {
+  "closeButton": false,
+  "debug": false,
+  "newestOnTop": false,
+  "progressBar": false,
+  "positionClass": "toast-top-center",
+  "onclick": null,
+  "showDuration": "300",
+  "hideDuration": "1000",
+  "timeOut": "1500",
+  "extendedTimeOut": "1000",
+  "showEasing": "swing",
+  "hideEasing": "linear",
+  "showMethod": "slideDown",  //fadeIn
+  "closeButton": true,
+  "hideMethod": "fadeOut",
+  "preventDuplicates": true
+
+}
+
+var button_pressed = "";
+ $("button").click(function() {
+    button_pressed = this.id;
+
+});
+
+$(document).ready(function() {
+
+
+//Inquiry Submit
+
+var inq_form = $("#inq_form");
+inq_form.on('submit', function(e) {
+    e.preventDefault(); 
+
+     if(button_pressed != 'inq_submit')
+    {
+       toastr.error('Invalid Request..!');
+       return false;
+    }
+
+    $("#"+button_pressed).attr("disabled", "disabled");
+
+    var name = $("#name").val();
+    var email = $("#email").val();
+    var contact = $("#contact").val();
+    var message = $("#message").val();
+
+
+  if(name == "" || email == "" || message == "")
+  {
+      toastr.error('Please Fill Atleast (*) Mendatory Values.');
+      $("#"+button_pressed).removeAttr("disabled");
+      return false;
+  }
+  else if(!ValidateEmail(email))
+  {
+      toastr.error('Please Enter Valid E-mail Address.');
+      $("#"+button_pressed).removeAttr("disabled");
+      return false;
+  }
+
+      
+     
+          $("#"+button_pressed).html("Wait..");
+          $.ajax({
+            url: 'isp/controller/home.php', 
+            type: 'POST', 
+            dataType: 'html', 
+            data: inq_form.serialize() + '&action=inquiry_create', 
+            
+            success: function(data) {
+              var response = JSON.parse(data);
+              if(response[0] == "success")
+              {
+                
+                  toastr.options.onHidden = function() { location.reload(); }
+                  toastr.success(response[1]);
+              }
+              else
+              {
+              
+               
+                 toastr.error(response);
+                 $("#"+button_pressed).removeAttr("disabled");
+                 $("#"+button_pressed).html("Submit");
+               
+
+                   
+              }
+              
+
+        
+            },
+           
+          });
+
+
+   });
+
+});
+
+    </script>
+
+  </body>
+</html>

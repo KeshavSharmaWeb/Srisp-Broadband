@@ -1,0 +1,393 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<style>
+    body {
+        overflow-x: hidden;
+    }
+</style>
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+
+    <div>
+        <ul class="breadcrumb">
+            <li>
+                <a href="/user">Home</a>
+            </li>
+            <li>
+                Tickets
+            </li>
+            <li>
+                Edit Ticket
+            </li>
+        </ul>
+    </div>
+
+    <div class="row">
+        <div class="box col-md-12">
+            <div class="box-inner">
+                <div class="box-header well" data-original-title="">
+                    <h2><i class="fa fa-ticket"></i> Ticket Edit [ #{{ticket.id}} ]</h2>
+                    <div class="box-icon">
+                        <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                                class="glyphicon glyphicon-chevron-up"></i></a>
+                        <a href="#" class="btn btn-close btn-round btn-default"><i
+                                class="glyphicon glyphicon-remove"></i></a>
+                    </div>
+                </div>
+
+
+
+                <!-- main information -->
+
+                <div class="panel panel-default">
+                    <!-- <div class="panel-heading"><i class="fa fa-info"></i>&nbsp;Info</div> -->
+                    <div class="panel-body" style="background-color: #fafafa;">
+
+                        {% if ticket.status|int == 1 %}
+                        {% set t_status = "Resolved" %}
+                        <span class="label label-success" style="font-size: 13px;  border: 1px #737578 solid;">#
+                            {{t_status}}</span>
+                        {% else %}
+                        {% set t_status = "Open" %}
+                        <span class="label label-danger" style="font-size: 13px;  border: 1px #737578 solid;">#
+                            {{t_status}}</span>
+                        {% endif %}
+
+                        <h4 style="font-size: 20px;">Ticket: #{{ticket_id}} - {{ticket.subject}} </h4>
+                        <p style="line-height: 30px;">
+                            CreatedDate:
+                            <b>{{ticket.created_date}}</b> | Operator/Employee: <b>None/None</b>
+                            <br>
+
+
+
+                        </p>
+
+                        <div style="line-height: 40px;">
+
+                            <a href="/resolve_ticket/{{ ticket_id }}" class="btn btn-success btn-sm" id="ticket_resolve_btn"><i
+                                    class="fa fa-check"></i>&nbsp;&nbsp;Resolve</a>
+
+                        </div>
+
+
+                    </div>
+                </div>
+
+                <style>
+                    .friend-list {
+                        list-style: none;
+                        margin-left: -40px;
+                    }
+
+                    .friend-list li {
+                        border-bottom: 1px solid #eee;
+                    }
+
+                    .friend-list li a img {
+                        float: left;
+                        width: 45px;
+                        height: 45px;
+                        margin-right: 10px;
+                    }
+
+                    .friend-list li a {
+                        position: relative;
+                        display: block;
+                        padding: 10px;
+                        transition: all .2s ease;
+                        -webkit-transition: all .2s ease;
+                        -moz-transition: all .2s ease;
+                        -ms-transition: all .2s ease;
+                        -o-transition: all .2s ease;
+                    }
+
+                    .friend-list li.active a {
+                        background-color: #f1f5fc;
+                    }
+
+                    .friend-list li a .friend-name,
+                    .friend-list li a .friend-name:hover {
+                        color: #777;
+                    }
+
+                    .friend-list li a .last-message {
+                        width: 65%;
+                        white-space: nowrap;
+                        text-overflow: ellipsis;
+                        overflow: hidden;
+                    }
+
+                    .friend-list li a .time {
+                        position: absolute;
+                        top: 10px;
+                        right: 8px;
+                    }
+
+                    small,
+                    .small {
+                        font-size: 85%;
+                    }
+
+                    .friend-list li a .chat-alert {
+                        position: absolute;
+                        right: 8px;
+                        top: 27px;
+                        font-size: 10px;
+                        padding: 3px 5px;
+                    }
+
+                    .chat-message {
+                        padding: 60px 20px 115px;
+                    }
+
+                    .chat {
+                        list-style: none;
+                        margin: 0;
+                    }
+
+                    .chat-message {
+                        background: #f9f9f9;
+                    }
+
+                    .chat li img {
+                        width: 45px;
+                        height: 45px;
+                        border-radius: 50em;
+                        -moz-border-radius: 50em;
+                        -webkit-border-radius: 50em;
+                    }
+
+                    img {
+                        max-width: 100%;
+                    }
+
+                    .chat-body {
+                        padding-bottom: 20px;
+                    }
+
+                    .chat li.left .chat-body {
+                        margin-left: 70px;
+                        background-color: #fff;
+                    }
+
+                    .chat li .chat-body {
+                        position: relative;
+                        font-size: 11px;
+                        padding: 10px;
+                        border: 1px solid #f1f5fc;
+                        box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+                        -moz-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+                        -webkit-box-shadow: 0 1px 1px rgba(0, 0, 0, .05);
+                    }
+
+                    .chat li .chat-body .header {
+                        padding-bottom: 5px;
+                        border-bottom: 1px solid #f1f5fc;
+                    }
+
+                    .chat li .chat-body p {
+                        margin: 0;
+                    }
+
+                    .chat li.left .chat-body:before {
+                        position: absolute;
+                        top: 10px;
+                        left: -8px;
+                        display: inline-block;
+                        background: #fff;
+                        width: 16px;
+                        height: 16px;
+                        border-top: 1px solid #f1f5fc;
+                        border-left: 1px solid #f1f5fc;
+                        content: '';
+                        transform: rotate(-45deg);
+                        -webkit-transform: rotate(-45deg);
+                        -moz-transform: rotate(-45deg);
+                        -ms-transform: rotate(-45deg);
+                        -o-transform: rotate(-45deg);
+                    }
+
+                    .chat li.right .chat-body:before {
+                        position: absolute;
+                        top: 10px;
+                        right: -8px;
+                        display: inline-block;
+                        background: #fff;
+                        width: 16px;
+                        height: 16px;
+                        border-top: 1px solid #f1f5fc;
+                        border-right: 1px solid #f1f5fc;
+                        content: '';
+                        transform: rotate(45deg);
+                        -webkit-transform: rotate(45deg);
+                        -moz-transform: rotate(45deg);
+                        -ms-transform: rotate(45deg);
+                        -o-transform: rotate(45deg);
+                    }
+
+                    .chat li {
+                        margin: 15px 0;
+                    }
+
+                    .chat li.right .chat-body {
+                        margin-right: 70px;
+                        background-color: #fff;
+                    }
+
+                    .chat-box {
+                        /*
+  position: fixed;
+  bottom: 0;
+  left: 444px;
+  right: 0;
+*/
+                        padding: 15px;
+                        border-top: 1px solid #eee;
+                        transition: all .5s ease;
+                        -webkit-transition: all .5s ease;
+                        -moz-transition: all .5s ease;
+                        -ms-transition: all .5s ease;
+                        -o-transition: all .5s ease;
+                    }
+
+                    .primary-font {
+                        color: #3c8dbc;
+                    }
+
+                    a:hover,
+                    a:active,
+                    a:focus {
+                        text-decoration: none;
+                        outline: 0;
+                    }
+                </style>
+                <!-- Message Block For First Message -->
+                <!-- selected chat -->
+                <div class="chat-box bg-white" id="chat_panel">
+                    <div class="chat-message">
+                        <ul class="chat" style="padding: 0 30px;">
+
+                            {% for chat in chats %}
+                            {% if chat['created_by'] == 'user' %}
+
+                            {% set pos = 'right' %}
+                            {% set name = 'You' %}
+
+                            {% else %}
+
+                            {% set pos = 'left' %}
+                            {% set name = "Admin" %}
+
+                            {% endif %}
+
+                            <li class="{{pos}} clearfix">
+                                <span class="chat-img pull-{{pos}}">
+                                    <img src="https://bootdey.com/img/Content/user_1.jpg" alt="User Avatar">
+                                </span>
+                                <div class="chat-body clearfix"  style="font-size: 15px;">
+                                    <div class="header">
+                                        <strong class="primary-font">{{ name }}</strong>
+                                        <small class="pull-right text-muted"><i class="fa fa-clock-o"></i>
+                                            {{chat['created_date']}}
+                                        </small>
+                                    </div>
+                                    <p>
+                                        {{chat['comment']}}
+                                    </p>
+                                </div>
+                            </li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+
+                </div>
+
+                <div class="chat-box bg-white">
+                    <div class="input-group">
+                        <input class="form-control border no-shadow no-rounded" placeholder="Type your message here" id="msg_val">
+                        <input type="number" value="{{ticket_id}}" id="tick_id" style="display: none;">
+                        <input type="number" value="{{ticket.u_id}}" id="u_id" style="display: none;">
+
+                        <span class="input-group-btn">
+                            <button class="btn btn-success no-rounded" type="button"
+                                id="chat_sub">Send</button>
+                        </span>
+                    </div><!-- /input-group -->
+                </div>
+                <p id="error_msg" class="chat-box bg-white" style="color: red; padding: 5px; text-align: center; font-size: 13px;">Message cannot be blank!</p>
+
+                <!-- Message Block For First Message End -->
+
+
+
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+</div>
+</script>
+<script src="custom_js/ticket.js?v=1.1.4"></script>
+
+
+<!-- content ends -->
+</div>
+<script>
+    $('#error_msg').hide()
+    $('#chat_sub').on('click', function () {
+    
+    selected_ele = document.getElementById('msg_val');
+    output = selected_ele.value;
+        
+    if(output != "") { 
+
+    tick = document.getElementById('tick_id');
+    ticket_output = tick.value;
+
+    u_id = document.getElementById('u_id');
+    u_id_output = u_id.value;
+    
+
+    $.ajax({
+        url: '/chat',
+        type: 'POST',
+        data: { msg_send: output, t_id : ticket_output, send_by : 'user', u_id : u_id_output},
+        success: function () {
+            $('#msg_val').val('');
+            $("#chat_panel").load(location.href+ " #chat_panel", );
+            $('#error_msg').hide()
+        }
+    });
+}
+else {
+    $('#error_msg').show()
+}
+
+});
+
+</script>
+
+<script>
+    $('document').ready(setInterval(function () {
+        $("#chat_panel").load(location.href + " #chat_panel",);
+    }, 1000));
+</script>
+
+{% endblock body %}

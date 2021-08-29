@@ -1,0 +1,280 @@
+{% extends 'user/layout.html' %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+  <!-- content starts -->
+
+  <div>
+    <ul class="breadcrumb">
+      <li>
+        <a href="/user">Home</a>
+      </li>
+      <li>
+        Recharge/Topup
+      </li>
+    </ul>
+  </div>
+
+  <div class="row main-cont">
+    <div class="box col-md-12">
+      <div class="box-inner">
+        <div class="box-header well" data-original-title="">
+          <h2><i class="fa fa-refresh"></i> Recharge/Topup</h2>
+
+          <div class="box-icon">
+            <!-- <a href="#" class="btn btn-setting btn-round btn-default"><i
+                    class="glyphicon glyphicon-cog"></i></a> -->
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i class="glyphicon glyphicon-remove"></i></a>
+          </div>
+        </div>
+        <div class="box-content row">
+          <!-- put your content here -->
+          <br>
+          <div class="col-md-12">
+            <h5 style="color: #d9534f;"><b>* Warning: </b>Previous Credit will be lost on Successful Recharge.</h5>
+            <br><br>
+          </div>
+
+
+
+          <!--- Recharge Mode -->
+          <div class="col-md-8 col-md-offset-2">
+
+            <div class="form-group row">
+              <label class="col-md-2 control-label"></label>
+              <div class="col-md-7">
+                <input type="radio" name="recharge_type" value="online_payment" id="online_payment"
+                  checked />&nbsp;Online/Wallet Payment
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <input type="radio" name="recharge_type" value="refill_code" id="code_payment" />&nbsp;Refill
+              </div>
+            </div>
+
+
+
+
+            <!-- Recharge With Online Payment -->
+
+            <div id="recharge_with_online" style="display: none;">
+
+
+
+              <form autocomplete="off" method="POST" id="online_recharge_frm" action="/rec_payment_summary"
+                class="form-horizontal form-sm">
+
+
+                <!--- Current Service -->
+                <div class="form-group row">
+                  <label class="col-md-2 col-form-label" for="multiple-select"><span class="mend">*</span>Current
+                    Service</label>
+                  <div class="col-md-6">
+                    <b>{{current_plan['s_name']}}</b>
+                  </div>
+                </div>
+
+                <div class="form-group row">
+                  <label class="col-md-2 col-form-label" for="multiple-select"><span
+                      class="mend">*</span>Service</label>
+                  <div class="col-md-6">
+                    <select id="selected_option" name="selected_option" class="form-control input-sm" required>
+                      <option value="{{current_plan}}" selected style="display: none;">{{current_plan['s_name']}}
+                      </option>
+
+                      {% for plan in plans %}
+                      <option value="{{plan}}">{{plan}}</option>
+                      {% endfor %}
+
+                    </select>
+                  </div>
+                </div>
+
+
+                <div class="form-group row">
+                  <div class="col-md-2"></div>
+                  <div class="col-md-6">
+                    <h5 class="text-center"><b><u>Service/Plan Description</u></b></h5>
+                    <table class="table table-bordered table-condensed table-striped table-hovered">
+                      <tr>
+                        <th>Rate (Down/UP)</th>
+                        <td id="rate">{{current_plan['s_downrate']}} Kbps / {{current_plan['s_uprate']}} Kbps</td>
+                      </tr>
+                      <tr>
+                        <th>Total Data Limit per Unit</th>
+                        <td id="totallimit">Unlimited</td>
+                      </tr>
+                      <tr>
+                        <th>Expiration Limit per Unit</th>
+                        <td id="datelimit">{{current_plan['s_datelimitnt']}} Month(s)</td>
+                      </tr>
+                      <tr>
+                        <th>Uptime Limit per Unit</th>
+                        <td id="onlinelimit">Unlimited</td>
+                      </tr>
+                      <tr>
+                        <th>Price per Unit</th>
+                        <td>&#8377; <p id="price" style="display: initial;">{% if s_groupname == 'Default' %}
+                            {{ user_data['u_comment'] }}
+                            {% else %}
+                            {{ current_plan['s_price'] }}
+                            {% endif %}</p>
+                        </td>
+                      </tr>
+                      <tr>
+                        <th>Inclusive All Taxes</th>
+                        <td id="pricewithtax">{% if current_plan['s_pricewithtax'] == '1' %}
+                          Yes
+                          {%else%}
+                          No
+                          {% endif %}</td>
+                      </tr>
+
+
+                    </table>
+
+                  </div>
+
+
+                </div>
+
+
+
+                <!-- Quantity -->
+
+                <input type="hidden" id="recharge_quantity" name="recharge_quantity" value="1">
+
+
+                <br>
+                <form action="/rec_payment_summary" method="POST">
+                  
+                  <input type="hidden" name="s_id" id="s_id" value="{{ current_plan['s_id'] }}">
+                  <input type="hidden" name="inp_rate" id="inp_rate"
+                    value="{{current_plan['s_downrate']}} Kbps / {{current_plan['s_uprate']}} Kbps">
+
+                  <input type="hidden" name="inp_data_limit" id="inp_data_limit" value="Unlimited">
+
+                  <input type="hidden" name="inp_expiration_limit" id="inp_expiration_limit"
+                    value="{{current_plan['s_datelimitnt']}} Month(s)">
+
+                  <input type="hidden" name="inp_uptime_limit" id="inp_uptime_limit" value="Unlimited">
+
+                  <input type="hidden" name="inp_price" id="inp_price" value="{% if s_groupname == 'Default' %}
+                    {{ user_data['u_comment'] }}
+                  {% else %}
+                  {{ current_plan['s_price'] }}
+                  {% endif %}">
+
+                  <input type="hidden" name="inp_tax_included" id="inp_tax_included" value="{% if current_plan['s_pricewithtax'] == '1' %}
+                    Yes
+                    {%else%}
+                    No
+                  {% endif %} ">
+
+                  <div class="col-md-8 text-center">
+                    <button class="btn btn-success btn-sm" id="online_recharge_btn" name="online_recharge_btn"><i
+                      class="fa fa-arrow-right" aria-hidden="true"></i>&nbsp;&nbsp;Next</button>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <!-- Recharge With Code -->
+
+            <div id="recharge_with_code">
+
+              <div class="form-group row">
+                <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Code</label>
+                <div class="col-md-6">
+                  <input type="text" id="recharge_code" name="recharge_code" class="form-control input-sm"
+                    placeholder="Enter The Refill Code" required>
+                </div>
+              </div>
+
+
+              <!-- Submit button -->
+
+              <br>
+              <div class="form-group row">
+
+                <div class="col-md-8 text-center">
+                  <a type="submit" class="btn btn-success btn-sm" id="code_recharge_btn" name="code_recharge_btn"><i
+                      class="fa fa-check" aria-hidden="true"></i>&nbsp;&nbsp;Recharge</a>
+                </div>
+              </div>
+
+
+              </form>
+
+
+            </div>
+
+
+
+
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--/row-->
+  <!-- content ends -->
+</div>
+<!--/#content.col-md-0-->
+
+<script src="{{ url_for('static', filename='js/recharge_topup.js') }}"></script>
+
+<script>
+  $('document').ready(function () {
+    $('#recharge_with_code').hide();
+    $('#recharge_with_online').show();
+    $('#selected_option').on('change', function () {
+      selected_ele = document.querySelector('#selected_option');
+      output = selected_ele.value;
+      $.ajax({
+        url: '/show_plan',
+        type: 'POST',
+        data: { selected_option: output },
+        success: function (response) {
+          $('#rate').html(response['s_downrate'] + " Kbps / " + response['s_uprate'] + " Kbps")
+          $('#inp_rate').val(response['s_downrate'] + " Kbps / " + response['s_uprate'] + " Kbps")
+          $('#onlinelimit').html('Unlimited')
+          $('#inp_uptime_limit').val('Unlimited')
+          $('#s_id').val(response['s_id'])
+
+          if (response['s_totallimit'] == '0') {
+            $('#totallimit').html('Unlimited')
+            $('#inp_data_limit').val('Unlimited')
+          }
+
+          if (parseFloat(response['s_price']) > 0) {
+            $('#price').html(parseFloat(response['s_price']))
+            $('#inp_price').val(parseFloat(response['s_price']))
+          }
+          else {
+            $('#price').html('0.00')
+            $('#inp_price').val('0.00')
+          }
+
+          if (response['s_pricewithtax' == '1']) {
+            $('#pricewithtax').html('Yes');
+            $('#inp_tax_included').val('Yes');
+          }
+          else {
+            $('#pricewithtax').html('No')
+            $('#inp_tax_included').val('No')
+          }
+
+          if (response['s_dateunit'] == 'mon') {
+            $('#datelimit').html(response['s_datelimitnt'] + " Month(s)")
+            $('#inp_expiration_limit').val(response['s_datelimitnt'] + " Month(s)")
+          }
+
+        }
+      });
+    });
+  });
+</script>
+
+{% endblock body %}

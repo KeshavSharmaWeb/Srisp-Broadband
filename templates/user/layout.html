@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <title>Client | JanitorRadius</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description"
+        content="Radius,radius,isp,janitorradius,janitor,radius,mikrotik,radiusserver,aaa,authentication,authorize,accounting,server">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv='cache-control' content='no-cache'>
+    <meta http-equiv='expires' content='0'>
+    <meta http-equiv='pragma' content='no-cache'>
+    <meta name="keyword"
+        content="Radius,radius,isp,janitorradius,janitor,radius,mikrotik,radiusserver,aaa,authentication,authorize,accounting,server">
+
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/charishma.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/toastr.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/data_table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/buttons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/res_data_table.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/font-awesome.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery-ui.min.css') }}">
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/jquery.datetimepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/themify-icons.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/daterangepicker.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-colorpicker.min.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom_style.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/bootstrap-multiselect.css') }}" type="text/css">
+
+    <!-- jQuery -->
+
+    <script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/toastr.min.js') }}"></script>
+    <script src="/static/js/toastr.min.js"></script>
+
+    <script type="text/javascript">
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "1500",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "slideDown",  //fadeIn
+            "closeButton": true,
+            "hideMethod": "slideUp",
+            "preventDuplicates": true
+
+        }
+    </script>
+
+
+    <style type="text/css">
+        .table td,
+        .table th {
+            white-space: nowrap;
+            width: 1%;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/new_css.css') }}">
+    <!-- Favicon link -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.15.3/css/all.css"
+        integrity="sha384-SZXxX4whJ79/gErwcOYf+zWLeJdY/qpuqC4cAa9rOGUstPomtqpuNWT9wdPEn2fk" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css">
+
+</head>
+
+<body>
+
+    <!-- topbar starts -->
+    <div id="load"></div>
+    <div class="navbar navbar-fixed-top" role="navigation">
+
+        <div class="navbar-inner">
+            <button type="button" class="navbar-toggle navbar-default pull-left">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="/user">
+                <span><img src="{{ url_for('static', filename='img/logo.png') }}" height="50"></span></a>
+
+            <!-- user dropdown starts -->
+            <div class="btn-group pull-right">
+                <button class="btn btn-default dropdown-toggle logout-btn" data-toggle="dropdown">
+                    <i class="fa fa-user"></i><span class="hidden-sm hidden-xs">{{ user_data['u_name'] }}</span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li><a href="/profile">Profile</a></li>
+                    <li class="divider"></li>
+                    <li><a href="/logout">Logout</a></li>
+                </ul>
+            </div>
+            <!-- user dropdown ends -->
+        </div>
+    </div>
+    <!-- topbar ends -->
+
+    <br>
+    <br>
+    <br>
+    <br>
+    <div class="ch-container">
+        <div class="row">
+
+
+            <!-- left menu starts -->
+            <div class="col-sm-2 col-lg-2 sticky">
+                <!-- <div class="row"> -->
+                <!-- <div class="col-*-4"> -->
+                <div class="sidebar-nav">
+                    <div class="nav-canvas">
+                        <div class="nav-sm nav nav-stacked">
+
+                        </div>
+                        <ul class="nav nav-pills nav-stacked main-menu">
+
+                            <!-- search box -->
+                            <li class="n-s-p">
+                                <input type="text" placeholder="Search" class="search-menu form-control input-md"
+                                    name="search-menu" autocomplete="off">
+                                <!-- <i class="fa fa-search s-icon hht" aria-hidden="true"></i> -->
+                            </li>
+                            <br>
+
+
+                            <li><a href="/user"><i class="fa fa-home"></i><span> Dashboard</span></a>
+                            </li>
+
+                            <!-- Service History -->
+
+                            <li class="accordion">
+                                <a href="#"><i class="fa fa-file-text"></i><span> Services</span>
+                                    <i class="fa fa-plus pull-right hht"></i>
+                                </a>
+                                <ul class="nav nav-pills nav-stacked">
+
+                                    <li><a href="/service_history"><i class="fa fa-circle-o"></i> History</a></li>
+
+                                </ul>
+                            </li>
+                            <!-- Invoice -->
+
+                            <li class="accordion">
+                                <a href="#"><i class="fa fa-file-text"></i><span> Invoice</span>
+                                    <i class="fa fa-plus pull-right hht"></i>
+                                </a>
+                                <ul class="nav nav-pills nav-stacked">
+
+                                    <li><a href="/list_invoice"><i class="fa fa-circle-o"></i> List Invoice</a></li>
+                                    <li><a href="/payment_history"><i class="fa fa-circle-o"></i> Payment
+                                            History</a></li>
+
+
+
+                                </ul>
+                            </li>
+
+                            <!-- Recharge/Topup -->
+
+                            <li>
+                                <a href="/recharge_topup"><i class="fa fa-refresh"></i><span> Recharge/Topup</span></a>
+                            </li>
+
+                            <!-- Tickets/complaint -->
+
+
+                            <li>
+                                <a href="/ticket_list"><i class="fa fa-comments" aria-hidden="true"></i><span>
+                                        Tickets/complaint</span></a>
+                            </li>
+
+
+                            <!-- Profile -->
+
+                            <li>
+                                <a href="/profile"><i class="fa fa-users"></i><span> Profile</span></a>
+                            </li>
+
+
+
+
+                        </ul>
+
+                    </div>
+                </div>
+
+            </div>
+
+
+            <noscript>
+                <div class="alert alert-block col-md-12">
+                    <h4 class="alert-heading">Warning!</h4>
+
+                    <p>You need to have <a href="http://en.wikipedia.org/wiki/JavaScript" target="_blank">JavaScript</a>
+                        enabled to use this site.</p>
+                </div>
+            </noscript>
+            {% block body %}{% endblock %}
+            <!--/#content.col-md-0-->
+
+        </div>
+        <!--/fluid-row-->
+
+
+
+        <hr>
+
+
+        <footer class="row">
+            <p class="col-md-9 col-sm-9 col-xs-12 copyright"></p>
+
+            <p class="col-md-3 col-sm-3 col-xs-12 powered-by">Copyright &copy;
+                <script>document.write(new Date().getFullYear());</script> All rights reserved
+            </p>
+        </footer>
+
+
+    </div>
+    <!--/.fluid-container-->
+
+
+    <!-- external javascript -->
+
+    <script src="{{ url_for('static', filename='js/jquery-3.2.1.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery-ui.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap.min.js') }}"></script>
+
+    <!-- library for cookie management -->
+    <script src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
+    <!-- calender plugin -->
+    <script src="{{ url_for('static', filename='js/moment.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/dataTables.buttons.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/buttons.bootstrap.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jszip.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/ip-address-sorting.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/buttons.html5.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/buttons.print.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/buttons.colVis.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.datetimepicker.full.min.js') }}"></script>
+
+
+
+
+    <script src="{{ url_for('static', filename='js/charisma.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-rowequalizer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-colequalizer.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/formatBytes.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/isotope.pkgd.min.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/jquery.daterangepicker.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/bootstrap-colorpicker.min.js') }}"></script>
+    <!-- <script src="../assets/js/AdminLTE.min.js"></script> -->
+    <!-- <script src="../template/assets/js/sweetalert.js"></script> -->
+    <script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js') }}"></script>
+    <script src="../assets/js/new_js.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/bootstrap-multiselect.js') }}"></script>
+    <script type="text/javascript" src="{{ url_for('static', filename='js/jquery.cookie.js') }}"></script>
+
+
+    <script type="text/javascript">
+        $('.row-eq').rowequalizer();
+
+
+
+        // Date picker
+        $(document).ready(function () {
+            var currentDate = new Date();
+
+            $("#u_datelimit").datepicker({
+                changeMonth: true,
+                changeYear: true,
+                yearRange: "1901:2050",
+                dateFormat: "yy-mm-dd",
+                showButtonPanel: true,
+                minDate: new Date()
+                // gotoCurrent: true
+
+
+
+                // maxDate:'2016-04-28'
+            });
+
+
+        });
+
+
+        $('.modal-dialog').draggable();
+
+
+
+        ///////////Stop editting here/////////////////////////////////
+
+
+        $('.col-eq').masonry({
+
+            itemSelector: '.dash',
+            columnWidth: '.col-md-3',
+            percentPosition: true,
+            layoutMode: 'masonry'
+
+            // percentPosition: true
+
+            // use element for option
+
+            // percentPosition: true
+        });
+
+
+        //search on sidebar nav
+
+        // Case insensitive method for filter
+        jQuery.expr[':'].casecontains = (a, b, c) => jQuery(a).text().toUpperCase().indexOf(c[3].toUpperCase()) >= 0;
+
+        $('.search-menu').on('keyup', function () {
+            var input = $('.search-menu').val();
+            console.log('input: ' + input);
+            if (input.length != 0) {
+                // first hide the div #link-content lists from view
+                $('.main-menu li').hide();
+
+                $('.main-menu li.n-s-p').show();
+                // but secretly unhide the collapsed links
+                // using .show, so the nested uls can be viewed
+                $('.main-menu li.accordion ul').show();
+                // $('.main-menu li.accordion ul').addClass('active');
+                // then filter in the matching links only
+                $('.main-menu li:casecontains("' + input + '")').show();
+                var hht = $('.main-menu li:casecontains("' + input + '")').find('.hht');
+
+                hht.removeClass('fa-plus').addClass('fa-minus');
+
+                // $('.main-menu li:casecontains("'+input+'").i').addClass('fa-minus');
+
+            } else {
+                // secretly unhide the collapsed links
+                $('.main-menu li.accordion ul').hide();
+                // if search is empty, show the div and reset columns
+                $('.main-menu li').show();
+
+            }
+        });
+
+
+
+
+    </script>
+    <script src="{{ url_for('static', filename='js/validation.js') }}"></script>
+
+</body>
+
+</html>

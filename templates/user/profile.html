@@ -1,0 +1,146 @@
+{% extends "user/layout.html" %}
+{% block body %}
+<div id="content" class="col-lg-10 col-sm-10">
+    <!-- content starts -->
+
+<div>
+<ul class="breadcrumb">
+<li>
+    <a href="/user">Home</a>
+</li>
+<li>
+    Profile
+</li>
+</ul>
+</div>
+
+<div class="row">
+<div class="box col-md-12">
+<div class="box-inner">
+    <div class="box-header well" data-original-title="">
+        <h2><i class="fa fa-users"></i> Profile</h2>
+
+        <div class="box-icon">
+            <a href="#" class="btn btn-setting btn-round btn-default"><i
+                    class="glyphicon glyphicon-cog"></i></a>
+            <a href="#" class="btn btn-minimize btn-round btn-default"><i
+                    class="glyphicon glyphicon-chevron-up"></i></a>
+            <a href="#" class="btn btn-close btn-round btn-default"><i
+                    class="glyphicon glyphicon-remove"></i></a>
+        </div>
+    </div>
+    <div class="box-content row">
+        <!-- put your content here -->
+        <br>
+
+        
+        <div class="col-md-8 col-md-offset-2">
+           
+          <!--- Full Name -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Full Name</label>
+              <div class="col-md-7">
+              <input type="text" id="u_fullname" name="u_fullname" class="form-control input-sm" placeholder="Full Name" autocomplete="New-Password" value="{{ user['u_fullname'] }}" required disabled>
+              </div>
+              </div>
+
+              <!--- Company Name -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input">Company Name</label>
+              <div class="col-md-7">
+              <input type="text" id="u_cname" name="u_cname" class="form-control input-sm" placeholder="Company Name" autocomplete="New-Password" value="{{ user['u_cname'] }}" disabled>
+              </div>
+              </div>
+
+              <!--- Address -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Address</label>
+              <div class="col-md-7">
+                 <textarea id="u_address" name="u_address" placeholder="User Address" class="form-control input-sm"  autocomplete="New-Password" required disabled>{{ user['u_address'] }}</textarea>
+             
+              </div>
+              </div>
+
+              <!--- City -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>City</label>
+              <div class="col-md-7">
+              <input type="text" id="u_city" name="u_city" class="form-control input-sm" placeholder="City" autocomplete="New-Password" value="{{ user['u_city'] }}" required disabled>
+              </div>
+              </div>
+
+              <!--- ZIP -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>ZIP</label>
+              <div class="col-md-7">
+              <input type="number" id="u_zip" name="u_zip" class="form-control input-sm" placeholder="ZIP" autocomplete="New-Password" value="{{ user['u_zip'] }}" required disabled>
+              </div>
+              </div>
+
+               <!--- State -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>State</label>
+              <div class="col-md-7">
+              <input type="text" id="u_state" name="u_state" class="form-control input-sm" placeholder="State" autocomplete="New-Password" value="{{ user['u_state'] }}" required disabled>
+              </div>
+              </div>
+
+              <!--- Country -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Country</label>
+              <div class="col-md-7">
+              <input type="text" id="u_country" name="u_country" class="form-control input-sm" placeholder="Country" autocomplete="New-Password" value="{{ user['u_country'] }}" required disabled>
+              </div>
+              </div>
+
+              <!--- Phone NO -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input">Phone No.</label>
+              <div class="col-md-7">
+              <input type="text" id="u_phoneno" name="u_phoneno" class="form-control input-sm" placeholder="Phone No." autocomplete="New-Password" value="{{ user['u_phoneno'] }}" disabled>
+              </div>
+              </div>
+
+              <!--- Mobile No -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input"><span class="mend">*</span>Mobile No.</label>
+              <div class="col-md-7">
+              <input type="text" id="u_mobileno" name="u_mobileno" class="form-control input-sm" placeholder="Mobile No." autocomplete="New-Password" value="{{ user['u_mobileno'] }}" required disabled>
+              </div>
+              </div>
+
+              <!--- Email -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input">Email</label>
+              <div class="col-md-7">
+              <input type="email" id="u_email" name="u_email" class="form-control input-sm" placeholder="Email Address" autocomplete="New-Password" value="{{ user['u_email'] }}" disabled>
+              </div>
+              </div>
+
+
+               <!--- Tax Number -->
+              <div class="form-group row">
+              <label class="col-md-2 col-form-label" for="text-input">RECEIPT</label>
+              <div class="col-md-7">
+              <input type="text" id="u_taxno" name="u_taxno" class="form-control input-sm" placeholder="RECEIPT" autocomplete="New-Password" value="{{ user['u_taxno'] }}" disabled>
+              </div>
+              </div>
+
+    
+          </div>
+
+      
+
+      
+
+    </div>
+</div>
+</div>
+</div><!--/row-->
+
+<script src="{{ url_for('static', filename='js/profile.js') }}"></script>
+    <!-- content ends -->
+    </div><!--/#content.col-md-0-->
+
+
+{% endblock %}

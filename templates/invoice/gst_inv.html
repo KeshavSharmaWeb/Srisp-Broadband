@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<meta charset="utf-8">
+	<title>Gst Invoice</title>
+	<!-- <link rel="stylesheet" type="text/css" href="style.css"> -->
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			font-family: ARIAL;
+		}
+
+		.uppercase {
+			text-transform: uppercase;
+		}
+
+		.wrapper {
+			width: 1300px;
+			margin: 0 auto;
+		}
+
+		.top_img {
+			width: 50%;
+			float: left;
+		}
+
+		.top_text {
+			float: right;
+			margin: 0;
+			padding: 0;
+			margin-top: 10px;
+		}
+
+		.fl_right {
+			float: right;
+		}
+
+		.fl_left {
+			float: left;
+		}
+
+		span {
+			color: #AA3939;
+		}
+
+		p {
+			color: gray;
+		}
+
+		.txt_white {
+			color: white;
+		}
+
+		.size-12 {
+			font-size: 12px;
+		}
+
+		.middle {
+			float: left;
+			width: 100%;
+		}
+
+		.bill_frm {
+
+			margin-top: 80px;
+			float: left;
+			width: 50%;
+
+		}
+
+		.bill_frm_add {
+			width: 100%;
+
+		}
+
+		.bill_to {
+			float: right;
+			margin-top: 80px;
+			width: 48%;
+		}
+
+		.end {
+			float: left;
+			margin-top: 30px;
+		}
+
+		table {
+			float: left;
+			border: 2px solid white;
+			border-collapse: collapse;
+
+		}
+
+		table tr td {
+			padding: 10px;
+			border: 2px solid white;
+		}
+
+		.center {
+			text-align: center;
+		}
+
+		.paid_tag {
+			float: left;
+			width: 100%;
+			margin-top: 20px;
+
+		}
+
+		.tag {
+			margin-left: 40px;
+			text-align: center;
+			font-size: 25px;
+			padding: 10px;
+			border: 2px solid #AA3939;
+			width: 60px;
+			height: 30px;
+			color: #AA3939;
+			transform: rotate(-25deg);
+		}
+
+		.sign {
+
+			width: 100%;
+			margin-top: 50px;
+			float: left;
+		}
+
+		.sign p {
+			margin-left: 900px;
+		}
+
+		.msg {
+			float: left;
+			margin-top: 10px;
+
+		}
+
+		.dup {
+			background-color: #AA3939;
+			color: white;
+			width: 100px;
+		}
+	</style>
+</head>
+
+<body>
+	<div class="wrapper">
+
+
+
+		<div class="top_img">
+			<img src="{{url}}static/img/inv_img.PNG" height="150px">
+		</div>
+
+		<div class="top_text">
+			<h1 class="fl_right"><b>TAX INVOICE</b></h1><br>
+			<p class="fl_right"><span>INVOICE NO:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTX-2021-0309
+			</p><br>
+			<p class="fl_right"><span>GENERATED:</span>{{gen_datetime['date']}} {{gen_datetime['month']}}
+				{{gen_datetime['year']}} {{gen_datetime['hours']}}:{{gen_datetime['minutes']}}</p><br>
+			<p class="fl_right"><span>PRINTED:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{gen_datetime['date']}}
+				{{gen_datetime['month']}} {{gen_datetime['year']}} {{gen_datetime['hours']}}:{{gen_datetime['minutes']}}
+			</p><br>
+			<p class="fl_right"><span>DUE
+					DATE:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{gen_datetime['date']}}
+				{{gen_datetime['month']}} {{gen_datetime['year']}}</p>
+		</div>
+
+
+
+		<div class="middle">
+
+			<div class="bill_frm">
+				<h3><span>BILLING FORM</span></h3><br>
+				<hr color="#AA3939" width="95%"><br>
+				<h3 class="uppercase"><b>{{billing_from['name']}}</b></h3><br>
+				<p class="fl_left bill_frm_add size-12 uppercase">
+					{% if billing_from['address1'] %}
+					{{billing_from['address1']}} <br>
+					{% endif %}
+					{% if billing_from['address2'] %}
+					{{billing_from['address2']}} <br>
+					{% endif %}
+					{% if billing_from['address3'] %}
+					{{billing_from['address3']}}
+					{% endif %}
+				</p>
+					<p class="size-12 uppercase">Contact No.: {{billing_from['contact']}}</p>
+					<p class="size-12 uppercase">Mail: {{billing_from['email']}}</p>
+					<p class="size-12 uppercase">GST No.: {{billing_from['gst_no']}}</p>
+
+			</div>
+
+			<div class="bill_to">
+				<h3><span>BILLING TO</span></h3><br>
+				<hr color="#AA3939" width="100%"><br>
+				<h3><b>{{ billing_to['name'] }}</b></h3><br>
+				<p class="size-12">
+					{% if billing_to['address1'] %}
+						{{billing_to['address1']}} <br>
+					{% endif %}
+					{% if billing_to['address2'] %}
+						{{billing_to['address2']}} <br>
+					{% endif %}
+					{% if billing_to['address3'] %}
+						{{billing_to['address3']}}
+					{% endif %}</p>
+					<p class="size-12">Contact No.: {{billing_to['contact']}}</p>
+				<p class="size-12">GST No.: {{ billing_to['gst_no'] }}</p>
+			</div>
+
+
+		</div>
+
+		<div class="end">
+
+			<table width="100%">
+				<tr>
+					<th width="780px" align="left">PLAN</th>
+					<th width="260px">
+						<center>QTY</center>
+					</th>
+					<th width="260px">
+						<center>RATE</center>
+					</th>
+					<th width="260px">
+						<center>AMOUNT</center>
+					</th>
+				</tr>
+			</table>
+
+			<hr width="100%" color="#AA3939">
+
+			<table width="100%" class="data" bgcolor="white">
+
+				<tr bgcolor="lightgray">
+
+					<td width="780px">
+						<b>{{ plan['name'] }}</b>
+						<br><br>
+						<p class="size-12">Expiration: {{ plan['duration'] }} Month(s)</p>
+						<p class="size-12">DATA: {{ plan['data'] }}</p>
+						<p class="size-12">OnlineTime: {{ plan['onlineTime'] }}</p>
+						<p class="size-12">Expiry Date: {{ plan['expiry_date'] }}</p>
+					</td>
+
+					<td width="260px" class="center">
+						{{plan['qty']}}
+					</td>
+
+					<td width="260px" class="center">
+						INR {{plan['rate']}}
+					</td>
+
+					<td width="260px;" class="center">
+						INR {{total}}
+					</td>
+
+				</tr>
+
+				<!-- <tr bgcolor="lightgray">
+
+					<td>
+						<b>Installation+Other</b>
+					</td>
+
+					<td class="center">
+						1
+					</td>
+
+					<td class="center">
+						INR 2000.00
+					</td>
+
+					<td class="center">
+						INR 2000.00
+					</td>
+
+				</tr> -->
+
+				<tr>
+
+					<td>
+
+					</td>
+
+					<td>
+
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						Sub Total
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						INR {{total}}
+					</td>
+
+				</tr>
+				{% if companyGstStateCode == customerGstStateCode %}
+				
+				<tr>
+
+					<td>
+
+					</td>
+
+					<td>
+
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						CGST 9%
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						INR {{cgst}}
+					</td>
+
+				</tr>
+
+				<tr>
+
+					<td>
+
+					</td>
+
+					<td>
+
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						SGST 9%
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						INR {{sgst}}
+					</td>
+
+				</tr>
+				
+				{% else %}
+				
+				<tr>
+
+					<td>
+
+					</td>
+
+					<td>
+
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						IGST 18%
+					</td>
+
+					<td bgcolor="lightgray" class="center">
+						INR {{igst}}
+					</td>
+
+				</tr>
+
+				{% endif %}
+
+				<tr>
+
+					<td>
+
+					</td>
+
+					<td>
+
+					</td>
+
+					<td bgcolor="#AA3939" class="center txt_white">
+						Grand Total
+					</td>
+
+					<td bgcolor="#AA3939" class="center txt_white">
+						INR {{grand_total}}
+					</td>
+
+				</tr>
+
+			</table>
+
+		</div>
+
+		<div class="paid_tag">
+			<div class="tag">
+				<b>PAID</b>
+			</div>
+		</div>
+
+		<div class="sign">
+			<p>For SRISP</p><br><br><br><br><br><br>
+			<p>Authorized Signatory</p>
+		</div>
+
+		<div class="msg">
+			<p>This is Computer Generated Invoice. Subject To Delhi JURISDICTION.</p><br>
+			<p class="dup">DUPLICATE</p>
+		</div>
+	</div>
+</body>
+
+</html>
