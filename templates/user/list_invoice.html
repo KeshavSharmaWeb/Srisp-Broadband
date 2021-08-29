@@ -217,130 +217,130 @@
 
 <script type="text/javascript">
 
-$(document).ready(function() {
-var table = $('#allinv_list_tbl').dataTable( {
-"order": [[ 0, "desc" ]],
-"processing": true,
-
-// "ajax": "controller/invoice.php?action=invoice_list",
-"initComplete":function( settings, json){
-    $('#total').html(json.total);
-    $('#paid').html(json.paid);
-    $('#unpaid').html(json.unpaid);
+  $(document).ready(function() {
+  var table = $('#allinv_list_tbl').dataTable( {
+  "order": [[ 0, "desc" ]],
+  "processing": true,
+  
+  // "ajax": "controller/invoice.php?action=invoice_list",
+  "initComplete":function( settings, json){
+      $('#total').html(json.total);
+      $('#paid').html(json.paid);
+      $('#unpaid').html(json.unpaid);
+    },
+  language: {
+  search: "_INPUT_",
+  searchPlaceholder: "Find..."
   },
-language: {
-search: "_INPUT_",
-searchPlaceholder: "Find..."
-},
-lengthMenu: [
-[ 10, 25, 50, 100, -1 ],
-[ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
-],
-dom:  "<'row'<'col-sm-6'B><'col-sm-6'f>>" +
-"<'row'<'col-sm-12'tr>>" +
-"<'row'<'col-sm-5'i><'col-sm-7'p>>",
-buttons: [
-      'pageLength',
-{
-        extend:    'copyHtml5',
-        text:      '<i class="fa fa-files-o"></i>',
-        titleAttr: 'Copy'
-    },
-    {
-        extend:    'excelHtml5',
-        text:      '<i class="fa fa-file-excel-o"></i>',
-        titleAttr: 'Excel'
-    },
-    {
-      
-        extend:    'pdfHtml5',
-        text:      '<i class="fa fa-file-pdf-o"></i>',
-        titleAttr: 'PDF',
-        pageSize: 'A4',
-        orientation: 'landscape',
-        title: 'Total Regular User'
-},
-    {
-        extend:    'print',
-        text:      '<i class="fa fa-print"></i>',
-        titleAttr: 'Print',
-        exportOptions: {
-            columns: ':visible'
-          }
-},
-    {
-        extend:    'colvis',
-        text:      '<i class="fa fa-list"></i> Column',
-        titleAttr: 'Column'
-        },
-],
-
-
-columnDefs: [ 
+  lengthMenu: [
+  [ 10, 25, 50, 100, -1 ],
+  [ '10 rows', '25 rows', '50 rows', '100 rows', 'Show all' ]
+  ],
+  dom:  "<'row'<'col-sm-6'B><'col-sm-6'f>>" +
+  "<'row'<'col-sm-12'tr>>" +
+  "<'row'<'col-sm-5'i><'col-sm-7'p>>",
+  buttons: [
+        'pageLength',
   {
-   'targets': 0,
- 'searchable': false,
- 'orderable': false,
- 'className': 'dt-body-center',
- "data":null,
- "render": function (data){
-     return '<input type="checkbox" name="inv_id[]" value="' + data[1] + '">';
- }
-},
-
-{ "visible": false, "targets": [10,12,17,18,19,20,21,22,23,24,25,26] },
-
-
-
-
-
-{ "render": inv_list_links,
-"data": null,         
-"targets": [27], "targets": 27 }
-
-],
-'order': [1, 'desc'],
-
-'responsive': true,
-
-"rowCallback": function( row, data, index ) {
-if ( data[2] == 'Paid' ) {
-$('td', row).addClass("alert-success");
-}
-else if ( data[2] == 'Generated' ) {
-$('td', row).addClass("alert-warning");
-}
-else if ( data[2] == 'Pending' ) {
-$('td', row).addClass("alert-danger");
-}
-},
-
-select: {
-selector:'td:not(:first-child)',
-style:    'os'
-}
-
-
-});
-
-$('#select-all').on('click', function(){
-
-$('input[type="checkbox"]').prop('checked', this.checked);
-});
-});
-
-function inv_list_links(data) {
-
-return '<a target="_blank" href="'+data[27]+'" class="btn btn-info btn-xs"><i class="fa fa-print"></i>&nbsp&nbspPrint</a>';
-
-}
-
-
-
-
-</script>
-
-
+          extend:    'copyHtml5',
+          text:      '<i class="fa fa-files-o"></i>',
+          titleAttr: 'Copy'
+      },
+      {
+          extend:    'excelHtml5',
+          text:      '<i class="fa fa-file-excel-o"></i>',
+          titleAttr: 'Excel'
+      },
+      {
+        
+          extend:    'pdfHtml5',
+          text:      '<i class="fa fa-file-pdf-o"></i>',
+          titleAttr: 'PDF',
+          pageSize: 'A4',
+          orientation: 'landscape',
+          title: 'Total Regular User'
+  },
+      {
+          extend:    'print',
+          text:      '<i class="fa fa-print"></i>',
+          titleAttr: 'Print',
+          exportOptions: {
+              columns: ':visible'
+            }
+  },
+      {
+          extend:    'colvis',
+          text:      '<i class="fa fa-list"></i> Column',
+          titleAttr: 'Column'
+          },
+  ],
+  
+  
+  columnDefs: [ 
+    {
+     'targets': 0,
+   'searchable': false,
+   'orderable': false,
+   'className': 'dt-body-center',
+   "data":null,
+   "render": function (data){
+       return '<input type="checkbox" name="inv_id[]" value="' + data[1] + '">';
+   }
+  },
+  
+  { "visible": false, "targets": [10,12,17,18,19,20,21,22,23,24,25,26] },
+  
+  
+  
+  
+  
+  { "render": inv_list_links,
+  "data": null,         
+  "targets": [27], "targets": 27 }
+  
+  ],
+  'order': [1, 'desc'],
+  
+  'responsive': true,
+  
+  "rowCallback": function( row, data, index ) {
+  if ( data[2] == 'Paid' ) {
+  $('td', row).addClass("alert-success");
+  }
+  else if ( data[2] == 'Generated' ) {
+  $('td', row).addClass("alert-warning");
+  }
+  else if ( data[2] == 'Pending' ) {
+  $('td', row).addClass("alert-danger");
+  }
+  },
+  
+  select: {
+  selector:'td:not(:first-child)',
+  style:    'os'
+  }
+  
+  
+  });
+  
+  $('#select-all').on('click', function(){
+  
+  $('input[type="checkbox"]').prop('checked', this.checked);
+  });
+  });
+  
+  function inv_list_links(data) {
+  
+  return '<a target="_blank" href="/generate_invoice/'+data[1]+'" class="btn btn-info btn-xs"><i class="fa fa-print"></i>&nbsp&nbspPrint</a>';
+  
+  }
+  
+  
+  
+  
+  </script>
+  
+  
 
 
 

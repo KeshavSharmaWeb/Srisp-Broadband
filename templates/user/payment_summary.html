@@ -76,11 +76,26 @@
 
                         <tr>
                           <th>Sub Total</th>
-                          <td>&#8377; {{ plan['s_price'] }}</td>
+                          <td>&#8377; {{ subtotal }}</td>
                         </tr>
 
-                        
-
+                        {% if gst %}
+                          {% if customerGstStateCode == companyGstStateCode %}
+                          <tr>
+                            <th>SGST</th>
+                            <td>&#8377; {{ sgst_ }}</td>
+                          </tr>
+                          <tr>
+                            <th>CGST</th>
+                            <td>&#8377; {{ cgst_ }}</td>
+                          </tr>
+                          {% else %}
+                          <tr>
+                            <th>IGST</th>
+                            <td>&#8377; {{ igst_ }}</td>
+                          </tr>
+                          {% endif %}
+                        {% endif %}
 
                         <tr style="font-weight: bold;">
                           <th>Grand Total</th>

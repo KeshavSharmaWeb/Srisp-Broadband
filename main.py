@@ -15,6 +15,16 @@ from Crypto.Cipher import AES
 IV = "@@@@&&&&####$$$$"
 BLOCK_SIZE = 16
 
+billing_from =  {
+                "name": "rk mart",
+                "address1": "186, Arvind Nagar",
+                "address2": "CBI Colony, Jagatpura",
+                "address3": "Jaipur Rajasthan",
+                "contact": "9694603000",
+                "email": "office.rkmart@gmail.com",
+                "gst_no": "07BHNPS3038P1ZI"
+            }
+
 
 def generate_checksum(param_dict, merchant_key, salt=None):
     params_string = __get_param_string__(param_dict)
@@ -141,9 +151,9 @@ app = Flask(__name__)
 
 MERCHANT_ID = "eSNoWE46724710693818"
 MERCHANT_KEY = "jHLlK_Mhjn!Y1k!F"
-WEBSITE_NAME = "WEBSTAGING"
+WEBSITE_NAME = "CRINTERNT"
 INDUSTRY_TYPE_ID = "Retail"
-BASE_URL = "https://securegw-stage.paytm.in"
+BASE_URL = "https://securegw.paytm.in"
 
 
 # Production configs:
@@ -166,14 +176,36 @@ def home():
     return render_template('main.html')
 
 
-@app.route('/generate_invoice', methods=['GET', 'POST'])
-def gen_inv():
-    params = request.get_json()
-    dt = datetime.datetime.now()
+@app.route('/generate_invoice/<int:invoice_no>', methods=['GET', 'POST'])
+def gen_inv(invoice_no):
+    url = api + "ft_invoice_nw.php?u_id=" + session['user_data']['u_id']
+    all_invoices = requests.get(url).json()
+    invoice = [i for i in all_invoices if i['id'] == str(invoice_no)][0]
+    user_id = invoice.get('u_id')
+    plan_id = invoice.get('s_id')
+    userUrl = api + "ft_user.php"
+    userResponse = requests.get(userUrl).json()
 
-    total = int(params['plan_details']['qty']) * \
-        int(params['plan_details']['rate'])
+    planUrl = api + "ft_services.php"
+    planResponse = requests.get(planUrl).json()
 
+    user_details = [i for i in userResponse if i['u_id'] == user_id][0]
+    plan_details = [i for i in planResponse if i['s_id'] == plan_id][0]
+    gen_datetime = datetime.datetime.now().strftime('%d-$m-$Y')
+
+    if user_details['u_taxno'] in ["", None]:
+        gst = False
+        gst_no = "N/A"
+    else:
+        gst = True
+        gst_no = user_details['u_taxno']
+
+    dt = str(invoice['invoice_date'])
+    full_date, full_time = dt.split(' ') 
+    year, month, date = full_date.split('-')
+    hours, minutes, seconds = full_time.split(':')
+
+    dt = datetime.datetime(int(year), int(month), int(date), int(hours), int(minutes), int(seconds))
     gen_datetime = {
         "date": dt.day,
         "month": str(dt.strftime("%B")).upper(),
@@ -182,118 +214,54 @@ def gen_inv():
         "minutes": dt.minute
     }
 
+    params = {
+        "gst": gst,
+        "generated_datetime": gen_datetime,
+        "billing_from": billing_from,
+        "billing_to": {
+            "name": user_details.get('u_fullname'),
+            "address1": user_details.get('u_address'),
+            "address2": user_details.get('u_city'),
+            "address3": user_details.get('u_state') + ' ' + user_details.get('u_zip'),
+            "contact": user_details.get('u_mobileno'),
+            "email": user_details.get('u_email'),
+            "gst_no": gst_no
+        },
+        "plan_details": {
+            "name": plan_details.get('s_name'),
+            "duration": "Unlimited",
+            "data": "Unlimited",
+            "onlineTime": plan_details.get('s_onlinelimit'),
+            "expiry_date": invoice['expr_date'],
+            "qty": 1,
+            "rate": plan_details.get('s_price'),
+            "amount": plan_details.get('s_pricewithtax')
+        },
+        "subtotal": plan_details.get('s_price'),
+        "grand_total": plan_details.get('s_pricewithtax')
+    }
+
+    total = int(params['plan_details']['qty']) * \
+        int(params['plan_details']['rate'])
+
     if params['gst'] == True:
-        """
-        ############ GST BILL FORMAT ##########
-        params = {
-            "gst" : True | False,
-            "generated_datetime" : "",
-            "billing_from" : {
-                "name" : "",
-                "address1" : "",
-                "address2" : "",
-                "address3" : "",
-                "contact": "",
-                "email" : "",
-                "gst_no" : "MANDATORY"
-            }
-            "billing_to" : {
-                "name" : "",
-                "address1" : "",
-                "address2" : "",
-                "address3" : "",
-                "contact": "",
-                "email" : "",
-                "gst_no" : "MANDATORY"
-            },
-            "plan_details" : {
-                "name" : "",
-                "duration" : "",
-                "data" : "",
-                "onlineTime" : "",
-                "expiry_date" : "",
-                "qty" : "",
-                "rate" : "",
-                "amount": "",
-            }
-            "items" : [ IN THIS FORMAT  : -
-                "name" : "",
-                "qty" : "",
-                "rate" : "",
-                "amount": "", ]
+        companyGstStateCode = str(params['billing_from']['gst_no'][0]) + str(params['billing_from']['gst_no'][1])
+        customerGstStateCode = str(params['billing_to']['gst_no'][0]) + str(params['billing_to']['gst_no'][1])
 
-            "subtotal": "",
-            "cgst": "",
-            "sgst": "",
-            "grand_total": ""
-        }
+        amt_with_tax = int(total) / 1.18
+        tax_amt = int(total) - int(amt_with_tax)
 
-        """
-        companyGstStateCode = str(
-            params['billing_from']['gst_no'][0]) + str(params['billing_from']['gst_no'][1])
-        customerGstStateCode = str(
-            params['billing_to']['gst_no'][0]) + str(params['billing_to']['gst_no'][1])
-
-        amt_with_tax = int(total) * 1.18
-        tax_amt = int(amt_with_tax) - int(total)
-
-        cgst_ = tax_amt/2
-        sgst_ = cgst_
+        sgst_ = cgst_ = tax_amt/2
         igst_ = tax_amt
 
         rendered = render_template('invoice/gst_inv.html', params=params, url=request.url_root,
                                    gen_datetime=gen_datetime, billing_from=params['billing_from'],
                                    billing_to=params['billing_to'], plan=params['plan_details'],
                                    total=total, customerGstStateCode=customerGstStateCode,
-                                   companyGstStateCode=companyGstStateCode,
-                                   igst=igst_,
-                                   cgst=cgst_,
-                                   sgst=sgst_,
-                                   grand_total=int(amt_with_tax)
+                                   companyGstStateCode=companyGstStateCode, igst=igst_, cgst=cgst_,
+                                   sgst=sgst_, grand_total=int(amt_with_tax)
                                    )
     else:
-        """
-    ############ NON GST BILL FORMAT ##########
-    params = {
-        "gst" : True | False,
-        "generated_datetime" : "",
-        "billing_from" : {
-            "name" : "",
-            "address1" : "",
-            "address2" : "",
-            "address3" : "",
-            "contact": "",
-            "email" : ""
-        }
-        "billing_to" : {
-            "name" : "",
-            "address1" : "",
-            "address2" : "",
-            "address3" : "",
-            "contact": "",
-            "email" : "",
-            "gst_no" : "N/A"
-        }
-        "plan_details" : {
-                "name" : "",
-                "duration" : "",
-                "data" : "",
-                "onlineTime" : "",
-                "expiry_date" : "",
-                "qty" : "",
-                "rate" : "",
-                "amount": "",
-            }
-            "items" : [ IN THIS FORMAT  : -
-                "name" : "",
-                "qty" : "",
-                "rate" : "",
-                "amount": "", ]
-        "subtotal": "",
-        "grand_total": ""
-    }
-
-    """
         rendered = render_template(
             'invoice/nongst_inv.html',
             params=params, url=request.url_root, gen_datetime=gen_datetime,
@@ -302,13 +270,11 @@ def gen_inv():
             total=total
         )
 
-    path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-    config = configuration(wkhtmltopdf=path_wkhtmltopdf)
-    pdf = from_string(rendered, False, configuration=config)
-
-    dt = str(dt).replace(':', '')
-    with open(f'./static/invoices/invoice-{dt}.pdf', 'wb') as f:
-        f.write(pdf)
+    # path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+    # config = configuration(wkhtmltopdf=path_wkhtmltopdf)
+    pdf = from_string(rendered, False)
+    # with open(f'./static/invoices/invoice-{dt}.pdf', 'wb') as f:
+    #     f.write(pdf)
     response = make_response(pdf)
     response.headers['Content-Type'] = 'application/pdf'
     response.headers['Content-Disposition'] = 'inline; filename=invoice.pdf'
@@ -340,7 +306,7 @@ def chat():
     r = requests.post(api+"ft_tickets_comment.php",
                       json=payload, headers=HEADERS)
 
-    return "True"
+    return
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -626,7 +592,6 @@ def payment_summary():
             "CUST_ID": session['user_data']['u_id'],
             "TXN_AMOUNT": floated_amt,
             "CHANNEL_ID": "WEB",
-            # "CALLBACK_URL": f"{request.url_root}generate_invoice"
             "CALLBACK_URL": f"{request.url_root}after_payment/{session['user_data']['u_id']}/{request.form['s_id']}"
         }
 
@@ -636,7 +601,35 @@ def payment_summary():
 
         url = BASE_URL + '/theia/processTransaction'
 
-        return render_template('user/payment_summary.html', plan=final_plan, url=url, data=transaction_data, user_data=session['user_data']
+        total = int(final_plan['s_price'])
+        
+        userUrl = api + "ft_user.php"
+        userResponse = requests.get(userUrl).json()
+        user_details = [i for i in userResponse if i['u_id'] == session['user_id']][0]
+
+        if user_details['u_taxno'] in ["", None]:
+            gst = False
+            gst_no = "N/A"
+        else:
+            gst = True
+            gst_no = user_details['u_taxno']
+
+        companyGstStateCode = str(billing_from['gst_no'][0]) + str(billing_from['gst_no'][1])
+        customerGstStateCode = str(gst_no[0]) + str(gst_no[1])
+
+        if gst == True:
+            subtotal = int(final_plan['s_price']) / 1.18
+            amt_with_tax = int(total) / 1.18
+            tax_amt = int(total) - int(amt_with_tax)
+
+            sgst_ = cgst_ = tax_amt/2
+            igst_ = tax_amt
+        else:
+            subtotal=int(final_plan['s_price'])
+            sgst_ = cgst_ = igst_ = 0
+
+        return render_template('user/payment_summary.html', plan=final_plan, url=url, data=transaction_data, user_data=session['user_data'],
+         companyGstStateCode=companyGstStateCode, customerGstStateCode=customerGstStateCode, sgst_=sgst_, cgst_=cgst_, igst_=igst_, gst=gst, subtotal=subtotal
                                )
 
 @app.route('/admin', methods=['GET', 'POST'])
@@ -646,58 +639,6 @@ def admin_page():
 
 @app.route('/after_payment/<string:user_id>/<string:plan_id>', methods=['POST'])
 def after_payment(user_id, plan_id):
-    userUrl = api + "ft_user.php"
-    userResponse = requests.get(userUrl).json()
-
-    planUrl = api + "ft_services.php"
-    planResponse = requests.get(planUrl).json()
-
-    user_details = [i for i in userResponse if i['u_id'] == user_id][0]
-    plan_details = [i for i in planResponse if i['s_id'] == plan_id][0]
-
-    gen_datetime = datetime.datetime.now().strftime('%d-$m-$Y')
-
-    if user_details.get('u_taxno') == "":
-        gst = False
-        gst_no = "N/A"
-    else:
-        gst = True
-        gst_no = user_details.get('u_taxno')
-
-    payload = {
-        "gst": gst,
-        "generated_datetime": gen_datetime,
-        "billing_from": {
-            "name": "rk mart",
-            "address1": "186, Arvind Nagar",
-            "address2": "CBI Colony, Jagatpura",
-            "address3": "Jaipur Rajasthan",
-            "contact": "9694603000",
-            "email": "office.rkmart@gmail.com",
-            "gst_no": "07BHNPS3038P1ZI"
-        },
-        "billing_to": {
-            "name": user_details.get('u_fullname'),
-            "address1": user_details.get('u_address'),
-            "address2": user_details.get('u_city'),
-            "address3": user_details.get('u_state') + ' ' + user_details.get('u_zip'),
-            "contact": user_details.get('u_mobileno'),
-            "email": user_details.get('u_email'),
-            "gst_no": gst_no
-        },
-        "plan_details": {
-            "name": plan_details.get('s_name'),
-            "duration": "Unlimited",
-            "data": "3000",
-            "onlineTime": plan_details.get('s_onlinelimit'),
-            "expiry_date": "In 1 min",
-            "qty": 1,
-            "rate": plan_details.get('s_price'),
-            "amount": plan_details.get('s_pricewithtax')
-        },
-        "subtotal": plan_details.get('s_price'),
-        "grand_total": plan_details.get('s_pricewithtax')
-    }
 
     # log the callback response payload returned:
     callback_response = request.form.to_dict()
@@ -715,68 +656,9 @@ def after_payment(user_id, plan_id):
     verification_response = requests.post(
         url=url, json=transaction_verify_payload)
 
-    post_json = {
-        "id": "inv-gen_datetime",
-        "inv_type": "1",
-        "invoice_no": "WT-2020-0364",
-        "credit_date": "2020-01-22 10:59:49",
-        "invoice_date": "2020-02-01 15:22:38",
-        "paid_date": "2021-01-21 16:22:05",
-        "expr_date": "2020-02-21 00:00:00",
-        "status": "1",
-        "s_name": "8M-1Month",
-        "s_totallimitprint": "Unlimited",
-        "s_onlinelimitprint": "Unlimited",
-        "s_datelimitprint": "1 Month(s)",
-        "s_uprate": "8000 Kbps",
-        "s_downrate": "8000 Kbps",
-        "s_id": "7",
-        "u_name": "sr_addy",
-        "buyer_name": "Addy",
-        "buyer_address": "near salu home,delhi-",
-        "buyer_mobileno": "8800454595",
-        "quantity": "1",
-        "unit_price": "5000.00",
-        "sub_total": "5000.00",
-        "discount_enable": "0",
-        "discount_per": "0",
-        "discount_amount": "0.00",
-        "tax1_enable": "0",
-        "tax1_name": "CGST",
-        "tax1_per": "0",
-        "tax1_amount": "0.00",
-        "tax2_enable": "0",
-        "tax2_name": "GGST",
-        "tax2_per": "0",
-        "tax2_amount": "0.00",
-        "othertax_enable": "0",
-        "othertax_name": "OtherCharge",
-        "othertax_per": "0",
-        "othertax_amount": "0.00",
-        "totaltax_per": "0",
-        "totaltax_amount": "0.00",
-        "grand_total": "5000.00",
-        "paid_amount": "3300.00",
-        "payment_mode": "Cash",
-        "buyer_taxno": "",
-        "invoice_commit": "0",
-        "created_date": "2020-01-22 10:59:49",
-        "updated_date": "2021-01-21 16:22:05",
-        "created_by": "crisppl.srisp",
-        "updated_by": "crisppl.srisp",
-        "u_id": "2",
-        "m_id": "1",
-        "comment": "",
-        "rollback_comment": None,
-        "unique_id": "16833040005e27ddcd01db70.95271028",
-        "txn_id": None
-}
 
     if callback_response['STATUS'] == 'TXN_SUCCESS':
         status = 'success'
-        requests.post(f"{request.url_root}generate_invoice", json=payload)
-        post_url = api + "ft_invoice_nw.php?u_id=" + session['user_data']['u_id']
-        res = requests.post(post_url, json=post_json)
     else:
         status = 'fail'
 
