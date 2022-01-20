@@ -1,29 +1,48 @@
+import json
+from Crypto.Cipher import AES
 from flask import Flask, render_template, redirect, make_response, request, session, g, flash
 import datetime
 from pdfkit import from_string, configuration
 import requests
-import json
-
+import pymongo
 # PAYTM CHECKSUM CODE
 import base64
 import string
 import random
 import hashlib
 
-from Crypto.Cipher import AES
+MONGODB_URI = 'mongodb+srv://admin:admin@cluster0.pjg2t.mongodb.net/?retryWrites=true&w=majority'
+MONGODB_URI = "mongodb+srv://admin:admin@cluster0.6a7fj.mongodb.net/?retryWrites=true&w=majority"
+DATABASE_NAME = 'srisp'
+client = pymongo.MongoClient(MONGODB_URI)
+invoice = client[DATABASE_NAME]['Invoice']
+
+
+# get last invoice id
+def get_last_invoice_id():
+    last_invoice_id = invoice.find().sort([("id", pymongo.DESCENDING)]).limit(1)
+    for x in last_invoice_id:
+        return x['id']
+
+
+
+
 
 IV = "@@@@&&&&####$$$$"
 BLOCK_SIZE = 16
 
-billing_from =  {
-                "name": "rk mart",
-                "address1": "186, Arvind Nagar",
+path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
+config = configuration(wkhtmltopdf=path_wkhtmltopdf)
+
+billing_from = {
+    "name": "rk mart",
+    "address1": "186, Arvind Nagar",
                 "address2": "CBI Colony, Jagatpura",
                 "address3": "Jaipur Rajasthan",
                 "contact": "9694603000",
                 "email": "office.rkmart@gmail.com",
                 "gst_no": "07BHNPS3038P1ZI"
-            }
+}
 
 
 def generate_checksum(param_dict, merchant_key, salt=None):
@@ -149,11 +168,11 @@ app = Flask(__name__)
 # Staging configs:
 # Keys from https://dashboard.paytm.com/next/apikeys
 
+WEBSITE_NAME = "WEBSTAGING"
+INDUSTRY_TYPE_ID = "Retail"
+BASE_URL = "https://securegw-stage.paytm.in"
 MERCHANT_ID = "eSNoWE46724710693818"
 MERCHANT_KEY = "jHLlK_Mhjn!Y1k!F"
-WEBSITE_NAME = "CRINTERNT"
-INDUSTRY_TYPE_ID = "Retail"
-BASE_URL = "https://securegw.paytm.in"
 
 
 # Production configs:
@@ -170,6 +189,9 @@ app.config['SECRET_KEY'] = "super_secret_key"
 # api = 'http://103.146.110.30/topup/api/old/'
 api = 'http://103.146.110.30/topup/api/'
 
+userUrl = api + "ft_user.php"
+users_data = requests.get(userUrl).json()
+
 
 @app.route('/', methods=['GET', 'POST'])
 def home():
@@ -181,6 +203,7 @@ def gen_inv(invoice_no):
     url = api + "ft_invoice_nw.php?u_id=" + session['user_data']['u_id']
     all_invoices = requests.get(url).json()
     invoice = [i for i in all_invoices if i['id'] == str(invoice_no)][0]
+    inv_no = invoice.get('invoice_no')
     user_id = invoice.get('u_id')
     plan_id = invoice.get('s_id')
     userUrl = api + "ft_user.php"
@@ -201,15 +224,17 @@ def gen_inv(invoice_no):
         gst_no = user_details['u_taxno']
 
     dt = str(invoice['invoice_date'])
-    full_date, full_time = dt.split(' ') 
+    full_date, full_time = dt.split(' ')
     year, month, date = full_date.split('-')
     hours, minutes, seconds = full_time.split(':')
 
-    dt = datetime.datetime(int(year), int(month), int(date), int(hours), int(minutes), int(seconds))
+    dt = datetime.datetime(int(year), int(
+        month), int(date), int(hours), int(minutes))
+    year_str = str(dt.year)
     gen_datetime = {
         "date": dt.day,
-        "month": str(dt.strftime("%B")).upper(),
-        "year": dt.year,
+        "month": dt.month,
+        "year": year_str[-2] + year_str[-1],
         "hours": dt.hour,
         "minutes": dt.minute
     }
@@ -245,8 +270,10 @@ def gen_inv(invoice_no):
         int(params['plan_details']['rate'])
 
     if params['gst'] == True:
-        companyGstStateCode = str(params['billing_from']['gst_no'][0]) + str(params['billing_from']['gst_no'][1])
-        customerGstStateCode = str(params['billing_to']['gst_no'][0]) + str(params['billing_to']['gst_no'][1])
+        companyGstStateCode = str(
+            params['billing_from']['gst_no'][0]) + str(params['billing_from']['gst_no'][1])
+        customerGstStateCode = str(
+            params['billing_to']['gst_no'][0]) + str(params['billing_to']['gst_no'][1])
 
         amt_with_tax = int(total) / 1.18
         tax_amt = int(total) - int(amt_with_tax)
@@ -259,20 +286,17 @@ def gen_inv(invoice_no):
                                    billing_to=params['billing_to'], plan=params['plan_details'],
                                    total=total, customerGstStateCode=customerGstStateCode,
                                    companyGstStateCode=companyGstStateCode, igst=igst_, cgst=cgst_,
-                                   sgst=sgst_, grand_total=int(amt_with_tax)
-                                   )
+                                   sgst=sgst_, grand_total=int(amt_with_tax), inv_no=inv_no)
     else:
         rendered = render_template(
             'invoice/nongst_inv.html',
             params=params, url=request.url_root, gen_datetime=gen_datetime,
             billing_from=params['billing_from'], billing_to=params['billing_to'],
             plan=params['plan_details'],
-            total=total
-        )
+            total=total,
+            inv_no=inv_no)
 
-    # path_wkhtmltopdf = r'C:\Program Files\wkhtmltopdf\bin\wkhtmltopdf.exe'
-    # config = configuration(wkhtmltopdf=path_wkhtmltopdf)
-    pdf = from_string(rendered, False)
+    pdf = from_string(rendered, False, configuration=config)
     # with open(f'./static/invoices/invoice-{dt}.pdf', 'wb') as f:
     #     f.write(pdf)
     response = make_response(pdf)
@@ -321,16 +345,14 @@ def login():
         remember_me = request.form.get('remember')
 
         try:
-            url = api + "ft_user.php"
-            response = requests.get(url).json()
-            u_name_match = [d for d in response if d["u_name"] == u_name][0]
+
+            u_name_match = [d for d in users_data if d["u_name"] == u_name][0]
         except IndexError:
             u_name_match = []
 
         if u_name_match and u_name_match['u_password_pt'] == u_pass:
             session['user_id'] = u_name_match['u_id']
-            user_data = [d for d in response if d["u_id"]
-                         == u_name_match['u_id']][0]
+            user_data = [d for d in users_data if d["u_id"] == u_name_match['u_id']][0]
             session['user_data'] = user_data
             if remember_me == 'on':
                 session['is_remembered'] = True
@@ -372,13 +394,13 @@ def index():
 
         if remain_days.days >= 0:
             pass
-        
+
         else:
             remain_days = "N/A"
 
     except ValueError:
         remain_days = "N/A"
-        
+
     return render_template('user/index.html', remain_days=remain_days, user_data=session['user_data'])
 
 
@@ -438,12 +460,22 @@ def list_invoice():
     paid = 0
 
     for i in res:
+        print(i, '**************')
         total += int(float(i['grand_total']))
         paid += int(float(i['paid_amount']))
-
-        result = [d for d in plan_res if d['s_id'] == i['s_id']][0]
+        try:
+            result = [d for d in plan_res if d['s_id'] == i['s_id']][0]
+        except Exception as e:
+            result = {'s_name': 'N/A', 's_price': '0'}
 
         i['plan'] = result['s_name']
+        i['plan_price'] = result['s_price']
+        i['tax_amt'] = 18/100 * int(result['s_price'])
+
+        if str(str(i['invoice_no']).split('-')[0]).lower() == 'tx':
+            i['tax_per'] = "18%"
+        else:
+            i['tax_per'] = "0%"
 
     unpaid = int(total) - int(paid)
 
@@ -602,10 +634,11 @@ def payment_summary():
         url = BASE_URL + '/theia/processTransaction'
 
         total = int(final_plan['s_price'])
-        
+
         userUrl = api + "ft_user.php"
         userResponse = requests.get(userUrl).json()
-        user_details = [i for i in userResponse if i['u_id'] == session['user_id']][0]
+        user_details = [i for i in userResponse if i['u_id']
+                        == session['user_id']][0]
 
         if user_details['u_taxno'] in ["", None]:
             gst = False
@@ -614,7 +647,8 @@ def payment_summary():
             gst = True
             gst_no = user_details['u_taxno']
 
-        companyGstStateCode = str(billing_from['gst_no'][0]) + str(billing_from['gst_no'][1])
+        companyGstStateCode = str(
+            billing_from['gst_no'][0]) + str(billing_from['gst_no'][1])
         customerGstStateCode = str(gst_no[0]) + str(gst_no[1])
 
         if gst == True:
@@ -625,12 +659,13 @@ def payment_summary():
             sgst_ = cgst_ = tax_amt/2
             igst_ = tax_amt
         else:
-            subtotal=int(final_plan['s_price'])
+            subtotal = int(final_plan['s_price'])
             sgst_ = cgst_ = igst_ = 0
 
         return render_template('user/payment_summary.html', plan=final_plan, url=url, data=transaction_data, user_data=session['user_data'],
-         companyGstStateCode=companyGstStateCode, customerGstStateCode=customerGstStateCode, sgst_=sgst_, cgst_=cgst_, igst_=igst_, gst=gst, subtotal=subtotal
+                               companyGstStateCode=companyGstStateCode, customerGstStateCode=customerGstStateCode, sgst_=sgst_, cgst_=cgst_, igst_=igst_, gst=gst, subtotal=subtotal
                                )
+
 
 @app.route('/admin', methods=['GET', 'POST'])
 def admin_page():
@@ -639,12 +674,91 @@ def admin_page():
 
 @app.route('/after_payment/<string:user_id>/<string:plan_id>', methods=['POST'])
 def after_payment(user_id, plan_id):
-
-    # log the callback response payload returned:
+    ft_services = api + f"ft_services.php"
+    ft_services_res = requests.get(ft_services).json()
+    user = [i for i in users_data if i['u_id'] == user_id][0]
+    plan_details = [i for i in ft_services_res if i['s_id'] == plan_id][0]
+    current_datetime = datetime.datetime.now()
+    current_datetime.strftime("%Y-%m-%d %H:%M:%S")
+     # log the callback response payload returned:
     callback_response = request.form.to_dict()
+    # get current year
+    current_year = current_datetime.year
+    if user['u_taxno'] in ["", None]:
+        taxType = 'WT'
+    else:
+        taxType = 'TX'
+
+
+    payload = {
+        "inv_type": "1",
+        "invoice_no": f"{taxType}-{current_year}-{int(get_last_invoice_id())}",
+        "credit_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "invoice_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "paid_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "expr_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "status": "2", # paid
+        "s_name": plan_details['s_name'],
+        "s_totallimitprint": "Unlimited",
+        "s_onlinelimitprint": "Unlimited",
+        "s_datelimitprint": "1 Month(s)",
+        "s_uprate": plan_details['s_uprate'],
+        "s_downrate": plan_details['s_downrate'],
+        "s_id": plan_id,
+        "u_name": user['u_name'],
+        "buyer_name": user['u_fullname'],
+        "buyer_address":"",
+        "buyer_mobileno": "",
+        "quantity": "1",
+        "unit_price": str(plan_details['s_price']),
+        "sub_total": str(plan_details['s_price']),
+        "discount_enable": "0",
+        "discount_per": "0",
+        "discount_amount": "0.00",
+        "tax1_enable": "0",
+        "tax1_name": "",
+        "tax1_per": "0",
+        "tax1_amount": "0.00",
+        "tax2_enable": "0",
+        "tax2_name": "",
+        "tax2_per": "0",
+        "tax2_amount": "0.00",
+        "othertax_enable": "0",
+        "othertax_name": "OtherCharge",
+        "othertax_per": "0",
+        "othertax_amount": "0.00",
+        "totaltax_per": "0",
+        "totaltax_amount": "0.00",
+        "grand_total": str(plan_details['s_price']),
+        "paid_amount": str(plan_details['s_price']),
+        "payment_mode": "Cash",
+        "buyer_taxno": user['u_taxno'],
+        "invoice_commit": "0",
+        "created_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "updated_date": datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "created_by": "crisppl.srisp",
+        "updated_by": "crisppl.srisp",
+        "u_id": user['u_id'],
+        "m_id": user['m_id'],
+        "comment": "",
+        "rollback_comment": "sending from application *****",
+        "unique_id": "568268099600961d08491f8.59761503",
+        "txn_id": user['u_taxno'],
+    }
+
+
+    invoice_url = api + "ft_invoice_nw.php?u_id=" + \
+        user['u_id']
+    if callback_response['STATUS'] == 'TXN_SUCCESS':
+        print('adding to invoices!')
+        invoice_res = requests.post(invoice_url, json=payload).json()
+        print('invoice added, details = ', invoice_res)
+        invoice.insert_one({"id": int(get_last_invoice_id()) + 1})
+
+
+   
     # verify callback response checksum:
-    checksum_verification_status = verify_checksum(callback_response, MERCHANT_KEY,
-                                                   callback_response.get("CHECKSUMHASH"))
+    checksum_verification_status = verify_checksum(callback_response, MERCHANT_KEY,callback_response.get("CHECKSUMHASH"))
 
     # verify transaction status:
     transaction_verify_payload = {
@@ -656,7 +770,6 @@ def after_payment(user_id, plan_id):
     verification_response = requests.post(
         url=url, json=transaction_verify_payload)
 
-
     if callback_response['STATUS'] == 'TXN_SUCCESS':
         status = 'success'
     else:
@@ -665,10 +778,11 @@ def after_payment(user_id, plan_id):
     url = api + f"ft_userstatements.php?u_id={user_id}"
     res = requests.get(url).json()
 
-    return render_template('user/list_invoice.html', callback_response=callback_response,
-                           checksum_verification_status=checksum_verification_status,
-                           verification_response=verification_response.json(), statements=res, status=status, user_data=res)
+    # return render_template('user/list_invoice.html', callback_response=callback_response,
+    #                        checksum_verification_status=checksum_verification_status,
+    #                        verification_response=verification_response.json(), statements=res,status=status, user_data=res)
 
+    return redirect('/list_invoice')
 
 @app.route('/admin_chat/<int:id>', methods=['GET', 'POST'])
 def admin_chat(id):

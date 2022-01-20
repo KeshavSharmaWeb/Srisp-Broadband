@@ -157,20 +157,24 @@
 
 		<div class="top_text">
 			<h1 class="fl_right"><b>TAX INVOICE</b></h1><br>
-			<p class="fl_right"><span>INVOICE NO:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbspTX-2021-0309
-			</p><br>
-			<p class="fl_right"><span>GENERATED:</span>{{gen_datetime['date']}} {{gen_datetime['month']}}
-				{{gen_datetime['year']}} {{gen_datetime['hours']}}:{{gen_datetime['minutes']}}</p><br>
-			<p class="fl_right"><span>PRINTED:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{gen_datetime['date']}}
-				{{gen_datetime['month']}} {{gen_datetime['year']}} {{gen_datetime['hours']}}:{{gen_datetime['minutes']}}
-			</p><br>
-			<p class="fl_right"><span>DUE
-					DATE:</span>&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp{{gen_datetime['date']}}
-				{{gen_datetime['month']}} {{gen_datetime['year']}}</p>
+			<p><span>INVOICE NO:</span>
+				<span class="fl_right">
+					inv_no
+				</span>
+			</p>
+			<p><span>CREATED:</span>
+				<span class="fl_right">
+					{{gen_datetime['date']}}-{{gen_datetime['month']}}-{{gen_datetime['year']}} {{gen_datetime['hours']}}:{{gen_datetime['minutes']}}
+				</span>
+			</p>
+			
+			<p><span>DUE DATE:</span>
+				<span class="fl_right">
+					{{gen_datetime['date']}}-{{gen_datetime['month']}}-{{gen_datetime['year']}}
+				</span>
+			</p>
 		</div>
-
-
-
+		
 		<div class="middle">
 
 			<div class="bill_frm">
